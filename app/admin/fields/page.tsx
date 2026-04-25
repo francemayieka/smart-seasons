@@ -2,6 +2,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { AdminFieldItem } from "./AdminFieldItem";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminFieldsPage({ searchParams }: { searchParams: Promise<{ status?: string }> }) {
   const { status } = await searchParams;
 

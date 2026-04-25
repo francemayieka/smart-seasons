@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { generateAdminInvite, deleteInvite } from "./actions";
 import { CopyButton } from "./CopyButton";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminInvitePage() {
   const invites = await prisma.adminInvite.findMany({
     where: { used: false, expires: { gt: new Date() } },

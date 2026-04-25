@@ -6,6 +6,8 @@ import { FieldIcon } from "@/components/ui/icons";
 
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function AgentDashboard() {
   const session = await getServerSession(authOptions);
   

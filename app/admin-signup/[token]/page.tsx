@@ -3,6 +3,8 @@ import { AuthCard } from "@/components/auth/auth-card";
 import { AdminSignupForm } from "./AdminSignupForm";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminSignupPage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
 

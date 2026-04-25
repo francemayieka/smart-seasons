@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { PrismaClient } from "@prisma/client";
 import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { getFieldStatus, computeDaysSincePlanting } from "@/lib/status-engine";
-
-const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions);

@@ -3,6 +3,8 @@ import { UserIcon } from "@/components/ui/icons";
 import { AgentStatusSelect } from "./AgentStatusSelect";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminAgentsPage({ searchParams }: { searchParams: Promise<{ status?: string }> }) {
   const params = await searchParams;
   const statusFilter = params.status || "pending"; // Defaulting to pending to show new signups

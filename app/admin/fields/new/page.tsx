@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { NewFieldForm } from "./NewFieldForm";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function NewFieldPage() {
   const activeAgents = await prisma.user.findMany({
     where: { role: "AGENT", agentStatus: "ACTIVE" },
