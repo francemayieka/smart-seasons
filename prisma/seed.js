@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { Pool } from "pg";
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL.split("?")[0],
+  connectionString: process.env.DATABASE_URL.split("?")[0].replace('data-eng-france.e.aivencloud.com', '157.245.204.45'),
   ssl: {
     rejectUnauthorized: false,
   },

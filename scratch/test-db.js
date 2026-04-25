@@ -2,9 +2,8 @@ const { Pool } = require('pg');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const connectionString = process.env.DATABASE_URL;
-
-console.log('Testing connection to:', connectionString.split('@')[1]);
+const connectionString = process.env.DATABASE_URL.replace('data-eng-france.e.aivencloud.com', '157.245.204.45');
+console.log('Testing connection to IP:', '157.245.204.45');
 
 const pool = new Pool({
   connectionString: connectionString.split('?')[0], // Strip parameters

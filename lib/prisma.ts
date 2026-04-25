@@ -13,13 +13,19 @@ if (!connectionString) {
   throw new Error("DATABASE_URL is not set");
 }
 
+console.log("Initializing Prisma with database:", connectionString.split("@")[1]?.split("?")[0] || "unknown");
+
 const pool =
   globalForPrisma.prismaPool ??
   new Pool({
-    connectionString: connectionString.split("?")[0],
+    // Using the resolved IP address to bypass DNS/IPv6 timeout issues on this network
+    connectionString: connectionString.split("?")[0].replace('data-eng-france.e.aivencloud.com', '157.245.204.45'),
     ssl: {
       rejectUnauthorized: false,
     },
+    connectionTimeoutMillis: 30000,
+    max: 10, // Lowered max connections to avoid hitting Aiven limits
+    idleTimeoutMillis: 30000,
   });
 
 export const prisma =
