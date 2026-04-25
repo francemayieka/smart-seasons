@@ -18,13 +18,12 @@ console.log("Initializing Prisma with database:", connectionString.split("@")[1]
 const pool =
   globalForPrisma.prismaPool ??
   new Pool({
-    // Using the resolved IP address to bypass DNS/IPv6 timeout issues on this network
-    connectionString: connectionString.split("?")[0].replace('data-eng-france.e.aivencloud.com', '157.245.204.45'),
+    connectionString: connectionString.split("?")[0],
     ssl: {
       rejectUnauthorized: false,
     },
     connectionTimeoutMillis: 30000,
-    max: 10, // Lowered max connections to avoid hitting Aiven limits
+    max: 10,
     idleTimeoutMillis: 30000,
   });
 
