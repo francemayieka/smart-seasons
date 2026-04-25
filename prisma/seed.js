@@ -2,6 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import { Pool } from "pg";
+import dns from "node:dns";
+
+dns.setDefaultResultOrder("ipv4first");
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL.split("?")[0],
