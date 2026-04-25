@@ -16,17 +16,14 @@ export default function SignInPage() {
     e.preventDefault();
     setLoading(true);
 
-    const result = await signIn("credentials", {
+    const params = new URLSearchParams(window.location.search);
+    const callbackUrl = params.get("callbackUrl") || "/";
+
+    await signIn("credentials", {
       email,
       password,
-      redirect: false,
+      callbackUrl,
     });
-
-    if (result?.ok) {
-      window.location.href = "/";
-    } else {
-      alert("Invalid credentials");
-    }
 
     setLoading(false);
   };
