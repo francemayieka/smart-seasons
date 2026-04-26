@@ -20,10 +20,12 @@
 # production
 /build
 
-# sensitive routes/data
-app/admin-signup/[token]
+# sensitive routes
 app/admin/super-user
-/app/admininvite/
+app/admininvite
+app/admin/invite
+
+# sensitive data
 /data/admin-invites.json
 admin-invites.json
 
@@ -33,12 +35,7 @@ admin-invites.json
 next-steps.md
 catchup.sql
 *.bak
-
-# inspiration & non-essential assets
-flat-design-agriculture-company-landing-page/
-hand-drawn-agriculture-company-landing-page/
-landing-page-template-agriculture-farming-organic-food/
-scratch/
+*.log
 
 # debug
 npm-debug.log*
@@ -47,14 +44,17 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files
-.env
-.env.local
-.env.*.local
-!.env.example
+.env*
 
 # vercel
 .vercel
 
+# prisma
+prisma/seed.js
+prisma/seed.ts
+prisma/migrations_old/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
