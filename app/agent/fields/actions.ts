@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { Stage, Status } from "@prisma/client";
 
 async function evaluateFieldStatus(
@@ -78,51 +78,72 @@ async function evaluateFieldStatus(
   };
 }
 
+import { requireAgent } from "@/lib/auth-utils";
+
 export async function updateFieldAction(formData: FormData) {
-  const session = await getServerSession(authOptions);
-  
-  if (!session?.user?.id) {
-    return { error: "Not authenticated" };
-  }
+  try {
+    const session = await requireAgent();
+    
+    const fieldId = formData.get("fieldId") as string;
+    const stage = formData.get("stage") as Stage;
+    const note = formData.get("note") as string;
+    const cropHealth = formData.get("cropHealth") as string;
+    const soilCondition = formData.get("soilCondition") as string;
+    
+    if (!fieldId || !stage || !note) {
+      return { error: "Missing required fields" };
+    }
 
-  const fieldId = formData.get("fieldId") as string;
-  const stage = formData.get("stage") as Stage;
-  const note = formData.get("note") as string;
-  const cropHealth = formData.get("cropHealth") as string;
-  const soilCondition = formData.get("soilCondition") as string;
-  
-  if (!fieldId || !stage || !note) {
-    return { error: "Missing required fields" };
-  }
-
-  const { status, rating } = await evaluateFieldStatus(note, stage, cropHealth, soilCondition);
-
-  // Update the field stage and add the observation
-  await prisma.$transaction(async (tx) => {
-    // 1. Create the observation
-    await tx.observation.create({
-      data: {
-        fieldId,
-        agentId: session.user.id,
-        stage,
-        note,
-        cropHealth,
-        soilCondition,
-        aiRating: rating,
-      },
-    });
-
-    // 2. Update the field's current stage and computed status
-    await tx.field.update({
+    // Verify field ownership/assignment
+    const field = await prisma.field.findUnique({
       where: { id: fieldId },
-      data: {
-        currentStage: stage,
-        status: status,
-      },
+      select: { agentId: true }
     });
-  });
 
-  revalidatePath("/agent/fields");
-  revalidatePath("/admin");
-  return { success: true };
+    if (!field) {
+      return { error: "Field not found" };
+    }
+
+    if (session.user.role !== "ADMIN" && field.agentId !== session.user.id) {
+      return { error: "Unauthorized: You are not assigned to this field" };
+    }
+
+    const { status, rating } = await evaluateFieldStatus(note, stage, cropHealth, soilCondition);
+
+    // Update the field stage and add the observation
+    await prisma.$transaction(async (tx) => {
+      // 1. Create the observation
+      await tx.observation.create({
+        data: {
+          fieldId,
+          agentId: session.user.id,
+          stage,
+          note,
+          cropHealth,
+          soilCondition,
+          aiRating: rating,
+        },
+      });
+
+      // 2. Update the field's current stage and computed status
+      await tx.field.update({
+        where: { id: fieldId },
+        data: {
+          currentStage: stage,
+          status: status,
+        },
+      });
+    });
+
+    revalidateTag("agent-fields", "default");
+    revalidateTag("agent-dashboard", "default");
+    revalidateTag("dashboard", "default");
+    revalidateTag("fields", "default");
+    revalidatePath("/agent/fields");
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to update field:", error);
+    return { success: false, error: "Failed to save update. Please try again." };
+  }
 }

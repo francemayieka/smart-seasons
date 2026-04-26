@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+
 
 const agentLinks = [
   { name: "Dashboard", href: "/agent", icon: <ChartIcon className="h-5 w-5" /> },

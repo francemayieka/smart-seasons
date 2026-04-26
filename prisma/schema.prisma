@@ -19,6 +19,9 @@ model User {
   observations        Observation[]
   accounts            Account[]
   sessions            Session[]
+
+  @@index([role])
+  @@index([email])
 }
 
 model Field {
@@ -33,6 +36,10 @@ model Field {
   updatedAt    DateTime      @updatedAt
   agent        User?         @relation("AgentFields", fields: [agentId], references: [id])
   observations Observation[]
+
+  @@index([status])
+  @@index([agentId])
+  @@index([createdAt])
 }
 
 model Observation {
@@ -47,6 +54,10 @@ model Observation {
   soilCondition String?
   agent         User?    @relation(fields: [agentId], references: [id])
   field         Field    @relation(fields: [fieldId], references: [id])
+
+  @@index([fieldId])
+  @@index([agentId])
+  @@index([createdAt])
 }
 
 model CropRule {

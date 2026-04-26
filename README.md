@@ -1,120 +1,93 @@
-# SmartSeason Field Monitoring System
+# 🌿 SmartSeasons
 
-A Next.js application for tracking crop progress across multiple fields during a growing season. Features role-based authentication, field management, agent updates, and a knowledgebase-driven status engine that mimics AI predictions.
+**Where Farming Meets Magic.**  
+SmartSeasons is a next-generation field monitoring and management platform tailored for African agriculture. Built to empower farmers and field agents with data-driven insights, the platform streamlines crop tracking, health monitoring, and administrative oversight through an organic, high-impact interface.
 
-## Features
+---
 
-- **Role-based Access**: Admin (Coordinator) and Field Agent roles
-- **Field Management**: Create, assign, and monitor fields with crop types and stages
-- **Agent Updates**: Field agents can update stages and add observations
-- **Status Logic**: Rule-based status computation (Active, At Risk, Completed) using crop knowledgebase
-- **Dashboard Views**: Clean, tile-based UI with cards and tables for different user roles
-- **Authentication**: NextAuth.js with credentials provider
+## ✨ Key Features
 
-## Tech Stack
+- **Organic Landing Page**: A premium aesthetic designed to inspire trust and modernity in agriculture.
+- **Agent Field Monitoring**: Field agents can track crop stages (Planted, Growing, Ready, Harvested) and record vital observations (Soil Moisture, Crop Health).
+- **Admin Dashboard**: Comprehensive oversight of all field operations, agent performance tracking, and "At Risk" field identification using smart filtering.
+- **Responsive Design**: Fully optimized for mobile devices, allowing agents to capture data directly from the field.
+- **Secure RBAC**: Role-Based Access Control ensuring agents and administrators have isolated, secure workspaces.
 
-- **Frontend**: Next.js 16, React 19, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes, Prisma ORM
-- **Database**: PostgreSQL
-- **Auth**: NextAuth.js
-- **Styling**: Custom shadcn/ui-inspired components
+---
 
-## Setup Instructions
+## 🚀 Getting Started
 
-1. **Clone the repository**
+### Prerequisites
+- Node.js 18+
+- PostgreSQL (or Supabase)
+- Prisma CLI
+
+### Installation
+
+1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
-   cd shamba-records
+   git clone <my-repo-url>
+   cd smart-seasons
    ```
 
-2. **Install dependencies**
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-3. **Environment Setup**
-   Copy `.env.example` to `.env` and update the values:
-   ```bash
-   cp .env.example .env
+3. **Environment Setup**:
+   Create a `.env` file in the root directory and add your database and authentication secrets:
+   ```env
+   DATABASE_URL="postgresql://..."
+   NEXTAUTH_SECRET="your-secret"
+   NEXTAUTH_URL="http://localhost:3000"
    ```
-   Update `DATABASE_URL` with your PostgreSQL connection string.
 
-4. **Database Setup**
+4. **Initialize Database**:
    ```bash
    npx prisma generate
-   npx prisma migrate dev --name init
-   npm run db:seed
    ```
 
-5. **Run the application**
+5. **Run Development Server**:
    ```bash
    npm run dev
    ```
 
-6. **Access the app**
-   - Open [http://localhost:3000](http://localhost:3000)
-   - Sign in with demo credentials (see below)
+---
 
-## Demo Credentials
+## 🔐 Test Credentials
 
-- **Admin**: admin@smartseason.com / admin123
-- **Agent**: agent@smartseason.com / agent123
+For evaluation purposes, use the following credentials:
 
-## Design Decisions
+### **Administrator Access**
+- **Email**: `admin@smartseasons.com`
+- **Password**: `seasons254`
+- **Portal**: Access through the "Dashboard" button after login.
 
-### Database Schema
-- **Users**: Role-based with ADMIN/AGENT
-- **Fields**: Core entity with crop type, planting date, current stage, and agent assignment
-- **Observations**: Audit trail of stage changes and notes
-- **CropRules**: Knowledgebase for expected stage durations per crop
+### **Field Agent Access**
+- **Email**: `simbalui@smartseasons.com`
+- **Password**: `lui254`
+- **Portal**: Real-time field update workspace.
 
-### Status Logic
-Field status is dynamically computed using a dual-layered approach:
+---
 
-1.  **AI Engine (Gemini 1.5 Flash)**: When a field agent records a new observation, the note is analyzed in real-time by the Gemini AI. It scans for semantic markers of risk—such as mention of pests, disease, drought, or equipment failure—that might not be captured by simple keyword matching.
-2.  **Rule-based Fallback**: If the AI service is unavailable or an API key is not provided, the system falls back to a deterministic keyword scanner ("infested", "disease", "wilt", etc.).
-3.  **Lifecycle Transition**: If a field is updated to the "Harvested" stage, its status is automatically moved to **Completed**, regardless of previous risk assessments.
+## 🌐 Deployment
 
-This hybrid approach ensures high accuracy while maintaining system reliability.
+The project is configured for seamless deployment on Vercel.
+
+- **Live URL**: [smart-seasons.vercel](https://smart-seasons.vercel.app)
 
 
-### UI Design
-- **Tile-based Layout**: Cards for summaries, tables for detailed lists
-- **Green Theme**: Soft emerald accents on neutral backgrounds
-- **Minimal Icons**: Typography and color drive visual hierarchy
-- **Responsive**: Mobile-first design with adaptive grids
+## 🛠️ Built With
 
-### Security
-- Middleware-level route protection
-- Role-based API access control
-- Password hashing with bcryptjs
+- **Framework**: [Next.js 15+](https://nextjs.org/) (App Router)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Database**: [Prisma ORM](https://www.prisma.io/)
+- **Auth**: [NextAuth.js](https://next-auth.js.org/)
+- **Testing**: [Vitest](https://vitest.dev/)
+- **Typography**: Poppins & Roboto
 
-## API Endpoints
 
-- `GET /api/fields` - List fields (filtered by role)
-- `POST /api/fields` - Create field (admin only)
-- `POST /api/observations` - Add observation (agents for assigned fields)
+---
 
-## Assumptions
-
-- Single crop per field
-- Stages: Planted → Growing → Ready → Harvested
-- Agents can only update assigned fields
-- Status computed on read, not stored (for simplicity)
-
-## Development
-
-- **Linting**: `npm run lint`
-- **Build**: `npm run build`
-- **Database Commands**: See package.json scripts
-
-## Submission Notes
-
-This implementation demonstrates:
-- Clean architecture with separation of concerns
-- Working authentication and authorization
-- Functional CRUD operations
-- Intuitive UI with role-appropriate views
-- Extensible knowledgebase for status logic
-
-The system is ready for production deployment with proper environment configuration.
+*Proudly crafted by France*

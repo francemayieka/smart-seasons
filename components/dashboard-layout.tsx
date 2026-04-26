@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ChartIcon, FieldIcon, UserIcon, LeafIcon, MenuIcon, CloseIcon } from "@/components/ui/icons";
 import { LogoutButton } from "@/components/logout-button";
 import { useSession } from "next-auth/react";
+import { SmartPrefetch } from "@/components/smart-prefetch";
 
 type NavLink = {
   name: string;
@@ -27,84 +28,91 @@ export function DashboardLayout({
 
   if (status === "loading") {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-slate-50">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent"></div>
+      <div className="flex h-screen w-screen items-center justify-center bg-slate-50 font-roboto">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent shadow-lg shadow-emerald-100"></div>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-slate-50 font-roboto">
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm lg:hidden transition-opacity"
+          className="fixed inset-0 z-40 bg-emerald-950/40 backdrop-blur-sm lg:hidden transition-opacity"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside 
-        className={`fixed inset-y-0 left-0 z-50 w-72 transform border-r border-slate-200 bg-white transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 transform border-r border-emerald-800 bg-emerald-900 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        } shadow-xl flex flex-col h-full`}
       >
-        <div className="flex h-16 items-center justify-between border-b border-slate-100 px-6">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
+        <div className="flex h-20 items-center justify-between border-b border-emerald-800 px-6 shrink-0">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-emerald-900 shadow-lg">
               <LeafIcon className="h-5 w-5" />
             </div>
-            <span className="font-bold tracking-tight text-slate-900">ShambaRecords</span>
-          </div>
+            <span className="text-lg font-semibold tracking-tighter text-white font-poppins uppercase">SmartSeasons</span>
+          </Link>
           <button 
             onClick={() => setIsSidebarOpen(false)}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 lg:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-xl text-emerald-400 hover:bg-emerald-800 lg:hidden"
           >
             <CloseIcon className="h-5 w-5" />
           </button>
         </div>
         
-        <div className="px-6 py-6">
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-600/80">{roleLabel}</p>
+        <div className="flex-1 overflow-y-auto py-6">
+          <div className="px-6 mb-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-emerald-400/80 font-poppins">Workspace: {roleLabel}</p>
+          </div>
+
+          <nav className="flex flex-col gap-2 px-4 pb-24">
+            {links.map((link) => {
+              const isActive = pathname === link.href || (pathname.startsWith(link.href) && link.href !== '/admin' && link.href !== '/agent');
+              return (
+                <SmartPrefetch 
+                  key={link.name} 
+                  type={link.href.includes('agents') ? 'agents' : link.href.includes('fields') ? 'fields' : 'dashboard'}
+                  className="w-full"
+                >
+                  <Link
+                    href={link.href}
+                    onClick={() => setIsSidebarOpen(false)}
+                    className={`relative flex items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-semibold transition-all duration-300 cursor-pointer ${
+                      isActive
+                        ? "bg-emerald-600 text-white shadow-lg shadow-emerald-950/50"
+                        : "text-emerald-100/60 hover:bg-emerald-800/50 hover:text-white"
+                    }`}
+                  >
+                    <div className={`flex items-center justify-center transition-colors ${isActive ? "text-white" : "text-emerald-400"}`}>
+                      {link.icon}
+                    </div>
+                    <span className="font-roboto">{link.name}</span>
+                  </Link>
+                </SmartPrefetch>
+              );
+            })}
+          </nav>
         </div>
 
-        <nav className="flex flex-col gap-1.5 px-4 py-2">
-          {links.map((link) => {
-            const isActive = pathname === link.href || (pathname.startsWith(link.href) && link.href !== '/admin' && link.href !== '/agent');
-            return (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={() => setIsSidebarOpen(false)}
-                className={`flex items-center gap-3 rounded-2xl px-4 py-3.5 text-sm font-semibold transition-all duration-200 ${
-                  isActive
-                    ? "bg-emerald-50 text-emerald-700 shadow-sm shadow-emerald-100/50"
-                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                }`}
-              >
-                <div className={`flex items-center justify-center transition-colors ${isActive ? "text-emerald-600" : "text-slate-400"}`}>
-                  {link.icon}
-                </div>
-                {link.name}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="absolute bottom-0 w-full border-t border-slate-100 p-4 bg-white/80 backdrop-blur-md">
-          <div className="flex items-center justify-between gap-3 px-2">
+        <div className="shrink-0 border-t border-emerald-800 p-6 bg-emerald-950 shadow-[0_-4px_20px_rgba(0,0,0,0.2)]">
+          <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-500 border border-slate-200/50">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-800 text-emerald-300 border border-emerald-700/50 shadow-inner">
                 <UserIcon className="h-5 w-5" />
               </div>
               <div className="min-w-0">
-                <p className="truncate text-sm font-bold text-slate-900">{session?.user?.name || "User"}</p>
-                <p className="truncate text-[10px] text-slate-400 uppercase tracking-widest font-black leading-tight">{session?.user?.role}</p>
+                <p className="truncate text-sm font-semibold text-white font-poppins">{session?.user?.name || "User"}</p>
+                <p className="truncate text-[10px] text-emerald-400/70 uppercase tracking-widest font-bold font-roboto">{session?.user?.role}</p>
               </div>
             </div>
             <LogoutButton 
               showText={false}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-400 hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all shadow-sm" 
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-emerald-700 bg-emerald-800 text-emerald-400 hover:bg-red-950 hover:text-red-400 hover:border-red-900 transition-all shadow-lg cursor-pointer" 
             />
           </div>
         </div>
@@ -113,16 +121,16 @@ export function DashboardLayout({
       {/* Main Content */}
       <div className="flex flex-1 flex-col lg:pl-72">
         {/* Mobile Header */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-4 backdrop-blur-md lg:hidden">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
-              <LeafIcon className="h-5 w-5" />
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-emerald-800 bg-emerald-900 px-4 lg:hidden shadow-md">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-emerald-900 shadow-lg">
+              <LeafIcon className="h-4 w-4" />
             </div>
-            <span className="font-bold tracking-tight text-slate-900">ShambaRecords</span>
-          </div>
+            <span className="font-semibold tracking-tighter text-white font-poppins uppercase text-sm">SmartSeasons</span>
+          </Link>
           <button 
             onClick={() => setIsSidebarOpen(true)}
-            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 shadow-sm"
+            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-emerald-700 bg-emerald-800 text-emerald-400 shadow-lg"
           >
             <MenuIcon className="h-6 w-6" />
           </button>
@@ -137,4 +145,3 @@ export function DashboardLayout({
     </div>
   );
 }
-

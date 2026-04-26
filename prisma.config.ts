@@ -45,9 +45,8 @@ if (!process.env.DATABASE_URL || !process.env.DIRECT_URL) {
 export default defineConfig({
   schema: "prisma/schema.prisma",
   datasource: {
-    url: process.env.DATABASE_URL || env("DATABASE_URL"),
-    directUrl: process.env.DIRECT_URL || env("DIRECT_URL"),
-  } as any,
+    url: process.env.DIRECT_URL || env("DIRECT_URL"),
+  },
   migrations: {
     path: "prisma/migrations",
     seed: "node prisma/seed.js",

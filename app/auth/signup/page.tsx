@@ -5,39 +5,58 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AuthCard } from "@/components/auth/auth-card";
 import { FormInput } from "@/components/auth/form-input";
-import { FormSelect } from "@/components/auth/form-select";
 import { Button } from "@/components/ui/button";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
-  const [role, setRole] = useState("AGENT");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    setError(null);
 
-    const res = await fetch("/api/auth/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, name, role }),
-    });
-
-    if (res.ok) {
-      router.push("/auth/signin");
-    } else {
-      alert("Signup failed");
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
     }
 
-    setLoading(false);
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, name, role: "AGENT" }),
+      });
+
+      if (res.ok) {
+        router.push("/auth/signin");
+      } else {
+        const data = await res.json();
+        setError(data.message || "Signup failed. Please try again.");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please check your connection.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <AuthCard title="Sign up" subtitle="Create your account">
+    <AuthCard title="Sign Up" subtitle="Create your account">
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        {error && (
+          <div className="rounded-2xl bg-amber-50 p-4 border border-amber-200">
+            <p className="text-sm font-medium text-amber-800">{error}</p>
+          </div>
+        )}
+
         <FormInput
           id="name"
           label="Name"
@@ -58,33 +77,44 @@ export default function SignUpPage() {
           required
         />
 
-        <FormInput
-          id="password"
+        <PasswordInput
           label="Password"
-          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="••••••••"
           required
         />
 
-        <input type="hidden" name="role" value="AGENT" />
+        <PasswordInput
+          label="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="••••••••"
+          required
+        />
 
-        <Button type="submit" disabled={loading} className="w-full">
-          {loading ? "Signing up..." : "Sign up"}
+        <Button type="submit" disabled={loading} className="w-full h-14">
+          {loading ? (
+            <div className="flex items-center gap-2">
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              <span>Creating account...</span>
+            </div>
+          ) : "Sign Up"}
         </Button>
       </form>
 
-      <div className="mt-8 text-center">
+      <div className="mt-8 text-center space-y-4">
         <p className="text-sm text-slate-600">
           Already have an account?{" "}
-          <Link href="/auth/signin" className="text-emerald-600 hover:text-emerald-500">
-            Sign in
+          <Link href="/auth/signin" className="text-emerald-600 font-bold hover:text-emerald-500">
+            Sign In
           </Link>
         </p>
-        <Link href="/" className="text-sm text-slate-600 hover:text-slate-900">
-          Back to home
-        </Link>
+        <div>
+          <Link href="/" className="text-sm font-medium text-slate-400 hover:text-slate-900 transition">
+            Back to home
+          </Link>
+        </div>
       </div>
     </AuthCard>
   );

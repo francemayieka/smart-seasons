@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function createAgentAction(formData: FormData) {
   const name = formData.get("name") as string;
@@ -30,6 +31,10 @@ export async function createAgentAction(formData: FormData) {
       agentStatus: "PENDING", // user becomes active upon changing password
     },
   });
+
+  revalidateTag("agents", "default");
+  revalidateTag("dashboard", "default");
+  revalidatePath("/admin/agents");
 
   return { success: true, generatedPassword };
 }

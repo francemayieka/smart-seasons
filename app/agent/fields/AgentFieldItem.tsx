@@ -49,19 +49,19 @@ export function AgentFieldItem({ field }: FieldProps) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h3 className="text-xl font-bold text-slate-900">{field.name}</h3>
+            <h3 className="text-lg sm:text-xl font-semibold text-slate-900 truncate max-w-[150px] sm:max-w-none">{field.name}</h3>
             <Badge variant={field.status === "At Risk" ? "warning" : field.status === "Completed" ? "secondary" : "success"}>
               {field.status}
             </Badge>
           </div>
-          <p className="mt-1 text-sm font-medium text-slate-500">
+          <p className="mt-1 text-sm font-medium text-slate-500 font-roboto">
             {field.cropType} &bull; Current Stage: <span className="text-emerald-600">{field.stage}</span>
           </p>
         </div>
         
         <button 
           onClick={() => setIsOpen(!isOpen)}
-          className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition"
+          className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition whitespace-nowrap"
         >
           {isOpen ? "Close Form" : "Update Stage & Add Note"}
         </button>
@@ -137,16 +137,26 @@ export function AgentFieldItem({ field }: FieldProps) {
 
       {field.observations.length > 0 && (
         <div className="mt-6 border-t border-slate-100 pt-4">
-          <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">Your Recent Observations</h4>
+          <h4 className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-3 font-poppins">Recent Observations</h4>
           <div className="space-y-3">
             {field.observations.map(obs => (
-              <div key={obs.id} className="rounded-xl bg-slate-50 p-4 text-sm">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-semibold text-slate-700">Stage: {obs.stage}</span>
-                  <div className="flex gap-2">
-                    {obs.cropHealth && <span className="rounded bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">Health: {obs.cropHealth}</span>}
-                    {obs.soilCondition && <span className="rounded bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700">Soil: {obs.soilCondition}</span>}
-                    <span className="text-xs text-slate-500">{new Date(obs.createdAt).toLocaleDateString()}</span>
+              <div key={obs.id} className="rounded-xl border border-slate-100 bg-slate-50/30 p-4 text-sm font-roboto">
+                <div className="flex flex-wrap justify-between items-center gap-2 mb-2">
+                  <span className="font-semibold text-slate-700 whitespace-nowrap underline underline-offset-4 decoration-emerald-200">Stage: {obs.stage}</span>
+                  <div className="flex flex-wrap items-center gap-3">
+                    {obs.cropHealth && (
+                      <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 whitespace-nowrap">
+                        <span className="h-1 w-1 rounded-full bg-emerald-500" />
+                        Health: {obs.cropHealth}
+                      </span>
+                    )}
+                    {obs.soilCondition && (
+                      <span className="flex items-center gap-1 text-[10px] font-bold text-blue-600 whitespace-nowrap">
+                        <span className="h-1 w-1 rounded-full bg-blue-500" />
+                        Soil: {obs.soilCondition}
+                      </span>
+                    )}
+                    <span className="text-[10px] text-slate-400 whitespace-nowrap">{new Date(obs.createdAt).toLocaleDateString()}</span>
                   </div>
                 </div>
                 <p className="text-slate-600 mb-1 leading-relaxed">{obs.note}</p>

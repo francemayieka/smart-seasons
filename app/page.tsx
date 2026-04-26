@@ -1,94 +1,94 @@
-import { redirect } from "next/navigation";
+import Link from "next/link";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { LeafIcon } from "@/components/ui/icons";
+import { HomeNav } from "@/components/home-nav";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
 
-  if (session) {
-    if (session.user.role === "ADMIN") {
-      redirect("/admin");
-    } else if (session.user.role === "AGENT") {
-      redirect("/agent");
-    }
-    // If session exists but role is invalid/missing, stay on landing page
-    // or we could show a "pending approval" message.
-  }
-
-  // Landing page for unauthenticated users
   return (
-    <div className="relative isolate min-h-screen">
-      {/* Background decoration */}
-      <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
-        <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-emerald-200 to-emerald-400 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
-      </div>
+    <div className="flex min-h-screen flex-col bg-emerald-900 text-white font-roboto selection:bg-emerald-500/30 overflow-hidden relative">
+      {/* Organic Background Patterns */}
+      <div className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-emerald-400/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-950/20 blur-[100px] rounded-full pointer-events-none" />
+      
+      <HomeNav session={session} />
 
-      <main className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:gap-x-10 lg:px-8 lg:py-40">
-        <div className="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
-          <div className="flex">
-            <div className="relative flex items-center gap-x-4 rounded-full px-4 py-1 text-sm leading-6 text-slate-600 ring-1 ring-slate-900/10 hover:ring-slate-900/20">
-              <span className="font-semibold text-emerald-600">New Feature</span>
-              <span className="h-4 w-px bg-slate-900/10"></span>
-              <span className="flex items-center gap-x-1">
-                AI Risk Assessment
-              </span>
+      <main className="flex-1 relative z-10">
+        {/* Hero Section */}
+        <section className="mx-auto max-w-7xl px-6 py-12 lg:px-8 lg:py-32">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-32 lg:items-center">
+            <div className="max-w-2xl relative z-20">
+              <div className="inline-flex items-center gap-2 mb-6 text-emerald-400 font-bold tracking-[0.3em] uppercase text-xs">
+                <span className="h-px w-8 bg-emerald-400" />
+                Farming Is Our Business
+              </div>
+              <h1 className="text-[2.6rem] leading-[0.9] font-semibold tracking-tight font-poppins sm:text-7xl lg:text-9xl uppercase text-white drop-shadow-sm">
+                AGRICULTURE
+              </h1>
+              <h2 className="mt-2 text-3xl sm:text-4xl font-semibold text-emerald-300 font-poppins uppercase tracking-wider">
+                Magic in the field
+              </h2>
+              
+              <p className="mt-8 text-base sm:text-lg leading-relaxed text-emerald-50/70 font-roboto max-w-lg">
+                The next-generation field monitoring platform designed for African agriculture. Track crop health, manage field operations, and secure your harvest with data-driven magic.
+              </p>
+              
+              <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
+                <Link
+                  href="/auth/signup"
+                  className="w-full sm:w-auto rounded-full bg-emerald-400 px-10 py-4 text-center text-base font-semibold text-emerald-900 shadow-2xl hover:bg-white hover:scale-105 transition-all font-poppins uppercase"
+                >
+                  Begin Journey
+                </Link>
+                <Link
+                  href="/dashboard"
+                  className="w-full sm:w-auto rounded-full bg-white/10 border border-white/20 px-10 py-4 text-center text-base font-semibold text-white hover:bg-white hover:text-emerald-900 transition-all font-poppins uppercase"
+                >
+                  Access Portal
+                </Link>
+              </div>
+            </div>
+
+            <div className="mt-16 lg:mt-0 relative flex justify-center lg:justify-end z-10">
+              {/* Main Image with Dotted Circle Mask */}
+              <div className="relative w-[280px] h-[280px] sm:w-[400px] sm:h-[400px] lg:w-[450px] lg:h-[450px]">
+                <div className="absolute inset-[-15px] sm:inset-[-20px] rounded-full border-4 border-dashed border-emerald-400/20 animate-[spin_30s_linear_infinite]" />
+                <div className="absolute inset-0 rounded-full border-4 sm:border-8 border-emerald-950/50 overflow-hidden shadow-2xl bg-emerald-950">
+                  <Image 
+                    src="/hero-livestock.png" 
+                    alt="African livestock" 
+                    fill 
+                    className="object-cover scale-110"
+                    priority
+                  />
+                </div>
+              </div>
             </div>
           </div>
-          <h1 className="mt-10 text-4xl font-black tracking-tight text-slate-900 sm:text-7xl leading-[1.1]">
-            Empowering <span className="text-emerald-600">Smart</span> Decisions in the Field.
-          </h1>
-          <p className="mt-6 text-lg leading-8 text-slate-600 max-w-xl">
-            The next-generation field monitoring platform. Track crop progress, manage field agents, and predict risks with a beautiful, role-based dashboard.
-          </p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center gap-x-6 gap-y-4">
-            <a
-              href="/auth/signup"
-              className="w-full sm:w-auto rounded-2xl bg-emerald-600 px-8 py-4 text-center text-sm font-bold text-white shadow-lg shadow-emerald-200 hover:bg-emerald-700 hover:scale-[1.02] active:scale-[0.98] transition-all"
-            >
-              Get Started as Admin
-            </a>
-            <a
-              href="/auth/signup"
-              className="w-full sm:w-auto rounded-2xl bg-white border border-slate-200 px-8 py-4 text-center text-sm font-bold text-slate-900 hover:bg-slate-50 hover:border-slate-300 transition-all"
-            >
-              Join as Field Agent <span aria-hidden="true">→</span>
-            </a>
-          </div>
-          <div className="mt-10 flex items-center gap-x-6 text-sm font-semibold text-slate-400">
-            <span>Built for scale</span>
-            <span>&bull;</span>
-            <span>Secure data</span>
-            <span>&bull;</span>
-            <span>Offline-first</span>
-          </div>
-        </div>
-
-        <div className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow">
-          <div className="relative mx-auto w-full max-w-lg lg:max-w-md">
-            <div className="glass rounded-[2rem] p-8 relative overflow-hidden">
-               <div className="absolute top-0 right-0 -mr-4 -mt-4 h-24 w-24 rounded-full bg-emerald-500/10 blur-xl"></div>
-               <div className="space-y-4">
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-xl bg-emerald-500 flex items-center justify-center text-white font-bold">SR</div>
-                    <div className="h-3 w-32 bg-slate-100 rounded-full"></div>
-                  </div>
-                  <div className="h-40 w-full bg-slate-50 rounded-2xl border border-dashed border-slate-200"></div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="h-20 bg-emerald-50 rounded-2xl"></div>
-                    <div className="h-20 bg-slate-50 rounded-2xl"></div>
-                  </div>
-               </div>
-            </div>
-          </div>
-        </div>
+        </section>
       </main>
 
-      {/* Footer background decoration */}
-      <div className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
-        <div className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-emerald-100 to-emerald-300 opacity-20 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"></div>
-      </div>
+      <footer className="relative z-10 border-t border-white/5 py-12">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 text-white">
+              <LeafIcon className="h-4 w-4" />
+            </div>
+            <span className="text-lg font-semibold tracking-tighter font-poppins uppercase text-white">SmartSeasons</span>
+          </div>
+          <div className="text-center md:text-right">
+            <p className="text-sm font-semibold text-emerald-100/50 font-poppins uppercase tracking-wider">
+              Proudly crafted by France
+            </p>
+            <p className="mt-1 text-xs text-emerald-900/40 font-medium font-poppins">© 2026 SmartSeasons. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -51,7 +51,7 @@ export function AdminSignupForm({ token }: { token: string }) {
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="admin@shamba.com"
+        placeholder="admin@smartseasons.com"
         required
       />
 

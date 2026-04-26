@@ -20,12 +20,25 @@
 # production
 /build
 
+# sensitive routes/data
 app/admin-signup/[token]
 app/admin/super-user
+/app/admininvite/
+/data/admin-invites.json
+admin-invites.json
 
 # misc
 .DS_Store
 *.pem
+next-steps.md
+catchup.sql
+*.bak
+
+# inspiration & non-essential assets
+flat-design-agriculture-company-landing-page/
+hand-drawn-agriculture-company-landing-page/
+landing-page-template-agriculture-farming-organic-food/
+scratch/
 
 # debug
 npm-debug.log*
@@ -33,7 +46,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files
 .env
 .env.local
 .env.*.local
@@ -45,8 +58,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-/app/admininvite/
-/data/admin-invites.json
-admin-invites.json
-
-next-steps.md
