@@ -11,7 +11,7 @@ export default async function AgentDashboard() {
   if (!session?.user?.id) return null;
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="mx-auto max-w-6xl w-full">
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">Agent Overview</h1>
         <p className="mt-2 text-slate-600">Track your assigned fields and record critical crop observations.</p>

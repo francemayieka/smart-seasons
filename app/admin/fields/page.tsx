@@ -22,13 +22,16 @@ export default async function AdminFieldsPage({
   ];
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="mx-auto max-w-6xl w-full">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">Fields Directory</h1>
           <p className="mt-2 text-slate-600">View all registered fields and monitor updates from agents.</p>
         </div>
-        <Link href="/admin/fields/new" className="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 transition shadow-lg shadow-emerald-200">
+        <Link 
+          href="/admin/fields/new" 
+          className="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-8 py-3 text-sm font-semibold text-white hover:bg-emerald-700 transition shadow-lg shadow-emerald-200 w-full sm:w-auto"
+        >
           Add Field
         </Link>
       </div>
@@ -39,7 +42,7 @@ export default async function AdminFieldsPage({
           <SmartPrefetch key={opt.value} type="fields" className="contents">
             <Link
               href={opt.value ? `/admin/fields?status=${opt.value}` : "/admin/fields"}
-              className={`px-5 py-2 rounded-xl text-sm font-bold transition ${
+              className={`px-5 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap ${
                 (status === opt.value || (!status && !opt.value))
                   ? "bg-white text-emerald-700 shadow-sm"
                   : "text-slate-500 hover:text-slate-700"

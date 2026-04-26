@@ -35,7 +35,7 @@ export function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50 font-roboto">
+    <div className="flex min-h-screen bg-slate-50 font-roboto max-w-full overflow-x-hidden">
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div 

@@ -36,7 +36,7 @@ export async function DashboardUpdates() {
   
   return (
     <div className="w-full">
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+      <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
         <h2 className="text-xl font-bold text-slate-900 mb-6">Latest Updates</h2>
         {latestObservations.length === 0 ? (
           <p className="text-slate-500 italic">No updates recorded yet.</p>

@@ -28,7 +28,7 @@ export default async function AgentFieldsPage({
   ];
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="mx-auto max-w-6xl w-full">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">My Fields</h1>
@@ -43,7 +43,7 @@ export default async function AgentFieldsPage({
             <Link
               key={opt.value}
               href={opt.value ? `/agent/fields?status=${opt.value}` : "/agent/fields"}
-              className={`px-5 py-2 rounded-xl text-sm font-bold transition ${
+              className={`px-5 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap ${
                 (status === opt.value || (!status && !opt.value))
                   ? "bg-white text-emerald-700 shadow-sm"
                   : "text-slate-500 hover:text-slate-700"
