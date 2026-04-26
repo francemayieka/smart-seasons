@@ -66,10 +66,26 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
+      // Initial sign in
       if (user) {
         token.role = (user as any).role;
         token.forcePasswordChange = (user as any).forcePasswordChange;
+        return token;
       }
+
+      // If token exists but role is missing, try to fetch it from DB
+      if (!token.role) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.sub },
+          select: { role: true, forcePasswordChange: true }
+        });
+        
+        if (dbUser) {
+          token.role = dbUser.role;
+          token.forcePasswordChange = dbUser.forcePasswordChange;
+        }
+      }
+
       return token;
     },
     async session({ session, token }) {

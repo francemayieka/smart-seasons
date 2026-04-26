@@ -28,18 +28,18 @@ export default async function AdminFieldsPage({ searchParams }: { searchParams: 
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">Fields Directory</h1>
           <p className="mt-2 text-slate-600">View all registered fields and monitor updates from agents.</p>
         </div>
-        <Link href="/admin/fields/new" className="rounded-2xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 transition shadow-lg shadow-emerald-200">
+        <Link href="/admin/fields/new" className="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 transition shadow-lg shadow-emerald-200">
           Add Field
         </Link>
       </div>
 
       {/* Filter Tabs */}
-      <div className="mb-8 flex gap-2 p-1.5 bg-slate-100 rounded-2xl w-fit">
+      <div className="mb-8 flex flex-wrap gap-2 p-1.5 bg-slate-100 rounded-2xl w-fit">
         {filterOptions.map((opt) => (
           <Link
             key={opt.value}
