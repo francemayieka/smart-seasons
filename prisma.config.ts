@@ -3,36 +3,40 @@ import path from "node:path";
 import { defineConfig, env } from "prisma/config";
 
 if (!process.env.DATABASE_URL) {
-  const envPath = path.resolve(process.cwd(), ".env");
+  const envFiles = [".env.local", ".env"];
 
-  if (existsSync(envPath)) {
-    const envFile = readFileSync(envPath, "utf8");
+  for (const file of envFiles) {
+    const envPath = path.resolve(process.cwd(), file);
 
-    for (const line of envFile.split(/\r?\n/)) {
-      const trimmed = line.trim();
+    if (existsSync(envPath)) {
+      const envFile = readFileSync(envPath, "utf8");
 
-      if (!trimmed || trimmed.startsWith("#")) {
-        continue;
-      }
+      for (const line of envFile.split(/\r?\n/)) {
+        const trimmed = line.trim();
 
-      const separatorIndex = trimmed.indexOf("=");
+        if (!trimmed || trimmed.startsWith("#")) {
+          continue;
+        }
 
-      if (separatorIndex === -1) {
-        continue;
-      }
+        const separatorIndex = trimmed.indexOf("=");
 
-      const key = trimmed.slice(0, separatorIndex).trim();
-      let value = trimmed.slice(separatorIndex + 1).trim();
+        if (separatorIndex === -1) {
+          continue;
+        }
 
-      if (
-        (value.startsWith('"') && value.endsWith('"')) ||
-        (value.startsWith("'") && value.endsWith("'"))
-      ) {
-        value = value.slice(1, -1);
-      }
+        const key = trimmed.slice(0, separatorIndex).trim();
+        let value = trimmed.slice(separatorIndex + 1).trim();
 
-      if (!(key in process.env)) {
-        process.env[key] = value;
+        if (
+          (value.startsWith('"') && value.endsWith('"')) ||
+          (value.startsWith("'") && value.endsWith("'"))
+        ) {
+          value = value.slice(1, -1);
+        }
+
+        if (!(key in process.env)) {
+          process.env[key] = value;
+        }
       }
     }
   }
@@ -42,6 +46,7 @@ export default defineConfig({
   schema: "prisma/schema.prisma",
   datasource: {
     url: env("DATABASE_URL"),
+    directUrl: env("DIRECT_URL"),
   },
   migrations: {
     path: "prisma/migrations",
