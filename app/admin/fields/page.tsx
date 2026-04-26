@@ -22,15 +22,15 @@ export default async function AdminFieldsPage({
   ];
 
   return (
-    <div className="mx-auto max-w-6xl w-full">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mx-auto max-w-6xl w-full px-5 lg:px-0">
+      <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">Fields Directory</h1>
           <p className="mt-2 text-slate-600">View all registered fields and monitor updates from agents.</p>
         </div>
         <Link 
           href="/admin/fields/new" 
-          className="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-8 py-3 text-sm font-semibold text-white hover:bg-emerald-700 transition shadow-lg shadow-emerald-200 w-full sm:w-auto"
+          className="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-8 py-3 text-sm font-semibold text-white hover:bg-emerald-700 transition shadow-lg shadow-emerald-200 w-full md:w-auto"
         >
           Add Field
         </Link>
@@ -54,7 +54,7 @@ export default async function AdminFieldsPage({
         ))}
       </div>
 
-      <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
         {fieldsData.length === 0 ? (
           <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center text-slate-500 shadow-sm">
             No fields recorded yet.

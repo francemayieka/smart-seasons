@@ -26,6 +26,7 @@ export function AgentFieldItem({ field }: FieldProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,13 +40,17 @@ export function AgentFieldItem({ field }: FieldProps) {
       setError(result.error);
       setLoading(false);
     } else {
-      setIsOpen(false);
+      setSuccess(true);
       setLoading(false);
+      setTimeout(() => {
+        setSuccess(false);
+        setIsOpen(false);
+      }, 2000);
     }
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm transition hover:shadow-md">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
@@ -123,13 +128,15 @@ export function AgentFieldItem({ field }: FieldProps) {
             ></textarea>
           </div>
 
-          <div className="flex justify-end pt-2">
+          <div className="flex justify-center lg:justify-end pt-2">
             <button 
               type="submit" 
-              disabled={loading}
-              className="rounded-xl bg-emerald-600 px-6 py-2.5 font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50"
+              disabled={loading || success}
+              className={`rounded-xl px-8 py-3 font-semibold text-white transition disabled:opacity-50 w-full lg:w-auto ${
+                success ? "bg-emerald-500" : "bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-100"
+              }`}
             >
-              {loading ? "Saving..." : "Save Update"}
+              {loading ? "Saving..." : success ? "Saved! ✓" : "Save Update"}
             </button>
           </div>
         </form>

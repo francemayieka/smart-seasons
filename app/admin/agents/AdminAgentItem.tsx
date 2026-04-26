@@ -19,8 +19,8 @@ interface AgentProps {
 
 export function AdminAgentItem({ agent }: AgentProps) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm transition hover:shadow-md">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div className="flex items-start gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600 shadow-inner">
             <UserIcon className="h-6 w-6" />
@@ -41,7 +41,7 @@ export function AdminAgentItem({ agent }: AgentProps) {
           </div>
         </div>
 
-        <div className="flex flex-col items-start sm:items-end gap-3 border-t border-slate-50 pt-4 sm:border-0 sm:pt-0">
+        <div className="flex flex-col items-start lg:items-end gap-3 border-t border-slate-50 pt-4 lg:border-0 lg:pt-0">
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
             Joined: {new Date(agent.createdAt).toLocaleDateString()}
           </p>

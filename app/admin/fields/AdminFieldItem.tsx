@@ -28,8 +28,8 @@ export function AdminFieldItem({ field }: FieldProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm transition hover:shadow-md">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
             <h3 className="text-xl font-bold text-slate-900">{field.name}</h3>

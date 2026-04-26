@@ -28,13 +28,13 @@ export default function NewAgentPage() {
 
   return (
     <div className="mx-auto max-w-2xl py-8">
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">Add New Agent</h1>
           <p className="mt-2 text-slate-600">Register a new field agent directly into the system.</p>
         </div>
-        <Link href="/admin/agents" className="text-sm font-semibold text-emerald-600 hover:text-emerald-700">
-          Back to Agents
+        <Link href="/admin/agents" className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 w-fit">
+          &larr; Back to Agents
         </Link>
       </div>
 
@@ -48,11 +48,17 @@ export default function NewAgentPage() {
               <h2 className="text-2xl font-bold text-slate-900">Agent added successfully!</h2>
             </div>
             
-            <div className="rounded-2xl bg-slate-50 p-6 text-left">
-              <p className="text-sm font-medium text-slate-500 mb-1">Temporary Login Details:</p>
-              <p className="text-lg font-mono text-slate-900">Email: {successData.email}</p>
-              <p className="text-lg font-mono text-slate-900">Password: {successData.generatedPassword}</p>
-              <p className="mt-4 text-xs text-amber-600 bg-amber-50 p-3 rounded-xl border border-amber-100">
+            <div className="rounded-2xl bg-slate-50 p-4 sm:p-6 text-left">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Temporary Login Details:</p>
+              <div className="space-y-2 break-all">
+                <p className="text-base sm:text-lg font-mono text-slate-900 flex flex-col sm:flex-row sm:gap-2">
+                  <span className="text-slate-400 font-sans text-xs">Email:</span> {successData.email}
+                </p>
+                <p className="text-base sm:text-lg font-mono text-slate-900 flex flex-col sm:flex-row sm:gap-2">
+                  <span className="text-slate-400 font-sans text-xs">Pass:</span> {successData.generatedPassword}
+                </p>
+              </div>
+              <p className="mt-4 text-[10px] sm:text-xs text-amber-600 bg-amber-50 p-3 rounded-xl border border-amber-100 leading-relaxed">
                 The agent will be prompted to change this temporary password upon their first login. Their account will remain pending until this step is completed.
               </p>
             </div>
