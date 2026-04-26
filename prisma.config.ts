@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { defineConfig, env } from "prisma/config";
 
-if (!process.env.DATABASE_URL) {
+if (!process.env.DATABASE_URL || !process.env.DIRECT_URL) {
   const envFiles = [".env.local", ".env"];
 
   for (const file of envFiles) {
@@ -45,8 +45,8 @@ if (!process.env.DATABASE_URL) {
 export default defineConfig({
   schema: "prisma/schema.prisma",
   datasource: {
-    url: env("DATABASE_URL"),
-    directUrl: env("DIRECT_URL"),
+    url: process.env.DATABASE_URL || env("DATABASE_URL"),
+    directUrl: process.env.DIRECT_URL || env("DIRECT_URL"),
   },
   migrations: {
     path: "prisma/migrations",
