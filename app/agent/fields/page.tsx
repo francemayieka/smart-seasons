@@ -36,13 +36,12 @@ export default async function AgentFieldsPage({
       />
 
       {/* Filter Tabs */}
-      <div className="mb-8 flex flex-nowrap gap-2 p-1.5 bg-slate-100 rounded-2xl w-full overflow-x-auto no-scrollbar scroll-smooth shadow-inner border border-slate-200/50">
+      <div className="mb-8 flex flex-nowrap gap-1.5 sm:gap-4 md:gap-6 p-1.5 bg-slate-100/50 rounded-2xl w-fit max-w-full overflow-x-auto no-scrollbar scroll-smooth shadow-inner border border-slate-200/50">
         {filterOptions.map((opt) => (
           <SmartPrefetch key={opt.value} type="fields" className="contents">
             <Link
-              key={opt.value}
               href={opt.value ? `/agent/fields?status=${opt.value}` : "/agent/fields"}
-              className={`px-5 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap ${
+              className={`px-3 py-2 sm:px-6 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
                 (status === opt.value || (!status && !opt.value))
                   ? "bg-white text-emerald-700 shadow-sm"
                   : "text-slate-500 hover:text-slate-700"

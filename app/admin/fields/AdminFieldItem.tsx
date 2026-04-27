@@ -39,7 +39,7 @@ export function AdminFieldItem({ field }: FieldProps) {
       actions={
         <button 
           onClick={() => setIsOpen(!isOpen)}
-          className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition whitespace-nowrap"
+          className="w-full rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition"
         >
           {isOpen ? "Hide History" : `View Updates (${field.observations.length})`}
         </button>
@@ -54,16 +54,26 @@ export function AdminFieldItem({ field }: FieldProps) {
           ) : (
             <div className="space-y-3">
               {field.observations.map(obs => (
-                <div key={obs.id} className="rounded-xl bg-slate-50 p-4 text-sm">
-                  <div className="flex flex-col gap-2 mb-2 md:flex-row md:justify-between md:items-center">
+                <div key={obs.id} className="rounded-xl bg-slate-50 p-4 text-sm max-w-full">
+                  <div className="flex flex-col gap-2 mb-2 md:flex-row md:justify-between md:items-center max-w-full">
                     <span className="font-semibold text-slate-700">Stage Update: {obs.stage}</span>
-                    <div className="flex flex-wrap gap-2 items-center">
-                      {obs.cropHealth && <span className="rounded-lg bg-emerald-100 px-2.5 py-1 text-[10px] font-bold text-emerald-700 border border-emerald-200/50">Health: {obs.cropHealth}</span>}
-                      {obs.soilCondition && <span className="rounded-lg bg-blue-100 px-2.5 py-1 text-[10px] font-bold text-blue-700 border border-blue-200/50">Soil: {obs.soilCondition}</span>}
-                      <span className="text-[10px] font-medium text-slate-400 whitespace-nowrap">{new Date(obs.createdAt).toLocaleString()}</span>
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 max-w-full">
+                      {obs.cropHealth && (
+                        <span className="flex items-center gap-1.5 rounded-lg bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-600 border border-emerald-100">
+                          <span className="h-1 w-1 rounded-full bg-emerald-500" />
+                          {obs.cropHealth}
+                        </span>
+                      )}
+                      {obs.soilCondition && (
+                        <span className="flex items-center gap-1.5 rounded-lg bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-600 border border-blue-100">
+                          <span className="h-1 w-1 rounded-full bg-blue-500" />
+                          {obs.soilCondition}
+                        </span>
+                      )}
+                      <span className="text-[10px] font-medium text-slate-400 ml-auto sm:ml-0">{new Date(obs.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
-                  <p className="text-slate-600 mb-2 leading-relaxed">{obs.note}</p>
+                  <p className="text-slate-600 mb-2 leading-relaxed break-words">{obs.note}</p>
                   <p className="text-xs font-medium text-slate-400">Recorded by: {obs.agent?.name || "Unknown"}</p>
                 </div>
               ))}

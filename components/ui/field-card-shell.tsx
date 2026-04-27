@@ -23,14 +23,14 @@ export const FieldCardShell = React.forwardRef<HTMLDivElement, FieldCardShellPro
   }, ref) => {
     return (
       <DashboardCard ref={ref}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="min-w-0">
-            <div className="flex items-center gap-3 flex-wrap">
-              <h3 className="text-xl font-bold text-slate-900 truncate max-w-[200px] sm:max-w-none">{name}</h3>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 min-w-0 max-w-full">
+          <div className="min-w-0 flex-1 max-w-full">
+            <div className="flex items-center gap-3 flex-wrap min-w-0">
+              <h3 className="text-xl font-bold text-slate-900 break-words">{name}</h3>
               <StatusBadge status={status} />
             </div>
             <p className="mt-1 text-sm font-medium text-slate-500 font-roboto">
-              {cropType} &bull; Current Stage: <span className="text-emerald-600">{stage}</span>
+              {cropType} &bull; Stage: <span className="text-emerald-600">{stage}</span>
             </p>
             {agentName && (
               <p className="mt-2 text-xs font-medium text-slate-400">
@@ -39,7 +39,7 @@ export const FieldCardShell = React.forwardRef<HTMLDivElement, FieldCardShellPro
             )}
           </div>
           
-          <div className="shrink-0">
+          <div className="shrink-0 w-full sm:w-auto max-w-full">
             {actions}
           </div>
         </div>

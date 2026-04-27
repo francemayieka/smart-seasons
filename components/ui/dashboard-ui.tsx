@@ -13,9 +13,9 @@ interface PageHeaderProps {
 export function PageHeader({ title, description, action }: PageHeaderProps) {
   return (
     <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">{title}</h1>
-        {description && <p className="mt-2 text-slate-600">{description}</p>}
+      <div className="min-w-0 flex-1">
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 break-words">{title}</h1>
+        {description && <p className="mt-2 text-slate-600 leading-relaxed">{description}</p>}
       </div>
       {action && (
         <Link 
@@ -31,7 +31,7 @@ export function PageHeader({ title, description, action }: PageHeaderProps) {
 
 export function DashboardContainer({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mx-auto max-w-6xl w-full px-4 sm:px-6">
+    <div className="mx-auto max-w-full lg:max-w-6xl w-full min-w-0">
       {children}
     </div>
   );
@@ -39,7 +39,7 @@ export function DashboardContainer({ children }: { children: React.ReactNode }) 
 
 export function HybridGrid({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 w-full min-w-0 max-w-full">
       {children}
     </div>
   );
@@ -52,7 +52,7 @@ export const DashboardCard = React.forwardRef<HTMLDivElement, { children: React.
       <Component 
         ref={ref as any}
         onClick={onClick}
-        className={`w-full rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm transition hover:shadow-md text-left ${className}`}
+        className={`w-full max-w-full min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm transition hover:shadow-md text-left ${className}`}
       >
         {children}
       </Component>

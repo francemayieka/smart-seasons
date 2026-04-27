@@ -120,9 +120,9 @@ export function DashboardLayout({
       </aside>
 
       {/* Main Content */}
-      <div className="flex flex-1 flex-col lg:pl-72">
+      <div className="flex flex-1 flex-col lg:pl-72 w-full max-w-full overflow-x-hidden">
         {/* Mobile Header */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-emerald-800 bg-emerald-900 px-4 lg:hidden shadow-md">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-emerald-800 bg-emerald-900 px-5 lg:hidden shadow-md overflow-hidden">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-emerald-900 shadow-lg">
               <LeafIcon className="h-4 w-4" />
@@ -136,8 +136,8 @@ export function DashboardLayout({
           />
         </header>
 
-        <main className="flex-1 min-w-0">
-          <div className="h-full py-8">
+        <main className="flex-1 w-full min-w-0 overflow-x-hidden">
+          <div className="h-full w-full max-w-full px-6 py-8 sm:px-8 lg:px-10 lg:py-12">
             {children}
           </div>
         </main>

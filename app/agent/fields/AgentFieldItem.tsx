@@ -157,7 +157,7 @@ export function AgentFieldItem({ field }: FieldProps) {
             {field.observations.map(obs => (
               <div key={obs.id} className="rounded-xl border border-slate-100 bg-slate-50/30 p-4 text-sm font-roboto">
                 <div className="flex flex-col gap-2 mb-3 sm:flex-row sm:justify-between sm:items-center">
-                  <span className="font-semibold text-slate-700 underline underline-offset-4 decoration-emerald-200 text-left">Stage: {obs.stage}</span>
+                  <span className="font-semibold text-slate-700 underline underline-offset-4 decoration-emerald-200 text-left shrink-0">Stage: {obs.stage}</span>
                   <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                     {obs.cropHealth && (
                       <span className="flex items-center gap-1.5 rounded-lg bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-600 border border-emerald-100">
@@ -171,7 +171,7 @@ export function AgentFieldItem({ field }: FieldProps) {
                         {obs.soilCondition}
                       </span>
                     )}
-                    <span className="text-[10px] font-medium text-slate-400 whitespace-nowrap ml-auto sm:ml-0">{new Date(obs.createdAt).toLocaleDateString()}</span>
+                    <span className="text-[10px] font-medium text-slate-400 ml-auto sm:ml-0">{new Date(obs.createdAt).toLocaleDateString()}</span>
                   </div>
                 </div>
                 <p className="text-slate-600 mb-1 leading-relaxed text-left">{obs.note}</p>

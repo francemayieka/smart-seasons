@@ -25,13 +25,13 @@ export default async function AdminAgentsPage({ searchParams }: { searchParams: 
       />
 
       {/* Filter Tabs */}
-      <div className="mb-8 flex flex-nowrap gap-2 p-1.5 bg-slate-100 rounded-2xl w-full overflow-x-auto no-scrollbar scroll-smooth shadow-inner border border-slate-200/50">
+      <div className="mb-8 flex flex-nowrap gap-1.5 sm:gap-4 md:gap-6 p-1.5 bg-slate-100/50 rounded-2xl w-fit max-w-full overflow-x-auto no-scrollbar scroll-smooth shadow-inner border border-slate-200/50">
         {["pending", "active", "former"].map((status) => (
           <SmartPrefetch key={status} type="agents" className="contents">
             <Link
-              href={`?status=${status}`}
-              className={`px-5 py-2 rounded-xl text-sm font-bold capitalize transition whitespace-nowrap ${
-                statusFilter === status
+              href={status === "pending" ? "/admin/agents" : `/admin/agents?status=${status}`}
+              className={`px-3 py-2 sm:px-6 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap capitalize ${
+                (statusFilter === status || (!statusFilter && status === "pending"))
                   ? "bg-white text-emerald-700 shadow-sm"
                   : "text-slate-500 hover:text-slate-700"
               }`}
