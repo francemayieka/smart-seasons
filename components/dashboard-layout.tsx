@@ -136,8 +136,8 @@ export function DashboardLayout({
           />
         </header>
 
-        <main className="flex-1">
-          <div className="h-full px-5 py-8 sm:px-8 lg:px-10 lg:py-12">
+        <main className="flex-1 min-w-0">
+          <div className="h-full py-8">
             {children}
           </div>
         </main>

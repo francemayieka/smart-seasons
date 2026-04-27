@@ -36,7 +36,7 @@ export default async function AdminFieldsPage({
       />
 
       {/* Filter Tabs */}
-      <div className="mb-8 flex flex-nowrap gap-2 p-1.5 bg-slate-100 rounded-2xl w-fit max-w-full overflow-x-auto no-scrollbar">
+      <div className="mb-8 flex flex-nowrap gap-2 p-1.5 bg-slate-100 rounded-2xl w-full overflow-x-auto no-scrollbar scroll-smooth shadow-inner border border-slate-200/50">
         {filterOptions.map((opt) => (
           <SmartPrefetch key={opt.value} type="fields" className="contents">
             <Link

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { updateFieldAction } from "./actions";
 import { FieldCardShell } from "@/components/ui/field-card-shell";
 import { CloseIcon } from "@/components/ui/icons";
+import { useClickAway } from "@/hooks/use-click-away";
 
 interface FieldProps {
   field: {
@@ -28,6 +29,7 @@ export function AgentFieldItem({ field }: FieldProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const cardRef = useClickAway(() => setIsOpen(false));
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,6 +54,7 @@ export function AgentFieldItem({ field }: FieldProps) {
 
   return (
     <FieldCardShell
+      ref={cardRef}
       name={field.name}
       status={field.status}
       cropType={field.cropType}
@@ -78,7 +81,7 @@ export function AgentFieldItem({ field }: FieldProps) {
     >
 
       {isOpen && (
-        <form onSubmit={handleSubmit} className="mt-6 border-t border-slate-100 pt-6 space-y-4">
+        <form onSubmit={handleSubmit} className="mt-6 border-t border-slate-100 pt-6 space-y-4 text-left">
           {error && <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>}
           
           <div>
@@ -154,7 +157,7 @@ export function AgentFieldItem({ field }: FieldProps) {
             {field.observations.map(obs => (
               <div key={obs.id} className="rounded-xl border border-slate-100 bg-slate-50/30 p-4 text-sm font-roboto">
                 <div className="flex flex-col gap-2 mb-3 sm:flex-row sm:justify-between sm:items-center">
-                  <span className="font-semibold text-slate-700 underline underline-offset-4 decoration-emerald-200">Stage: {obs.stage}</span>
+                  <span className="font-semibold text-slate-700 underline underline-offset-4 decoration-emerald-200 text-left">Stage: {obs.stage}</span>
                   <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                     {obs.cropHealth && (
                       <span className="flex items-center gap-1.5 rounded-lg bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-600 border border-emerald-100">
@@ -171,7 +174,7 @@ export function AgentFieldItem({ field }: FieldProps) {
                     <span className="text-[10px] font-medium text-slate-400 whitespace-nowrap ml-auto sm:ml-0">{new Date(obs.createdAt).toLocaleDateString()}</span>
                   </div>
                 </div>
-                <p className="text-slate-600 mb-1 leading-relaxed">{obs.note}</p>
+                <p className="text-slate-600 mb-1 leading-relaxed text-left">{obs.note}</p>
               </div>
             ))}
           </div>

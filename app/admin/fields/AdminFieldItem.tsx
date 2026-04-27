@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FieldCardShell } from "@/components/ui/field-card-shell";
+import { useClickAway } from "@/hooks/use-click-away";
 
 interface FieldProps {
   field: {
@@ -25,9 +26,11 @@ interface FieldProps {
 
 export function AdminFieldItem({ field }: FieldProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const cardRef = useClickAway(() => setIsOpen(false));
 
   return (
     <FieldCardShell
+      ref={cardRef}
       name={field.name}
       status={field.status}
       cropType={field.cropType}

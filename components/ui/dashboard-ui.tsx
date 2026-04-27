@@ -31,7 +31,7 @@ export function PageHeader({ title, description, action }: PageHeaderProps) {
 
 export function DashboardContainer({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mx-auto max-w-6xl w-full">
+    <div className="mx-auto max-w-6xl w-full px-4 sm:px-6">
       {children}
     </div>
   );
@@ -45,17 +45,22 @@ export function HybridGrid({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function DashboardCard({ children, onClick, className = "" }: { children: React.ReactNode, onClick?: () => void, className?: string }) {
-  const Component = onClick ? "button" : "div";
-  return (
-    <Component 
-      onClick={onClick}
-      className={`w-full rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm transition hover:shadow-md text-left ${className}`}
-    >
-      {children}
-    </Component>
-  );
-}
+export const DashboardCard = React.forwardRef<HTMLDivElement, { children: React.ReactNode, onClick?: () => void, className?: string }>(
+  ({ children, onClick, className = "" }, ref) => {
+    const Component = onClick ? "button" : "div";
+    return (
+      <Component 
+        ref={ref as any}
+        onClick={onClick}
+        className={`w-full rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm transition hover:shadow-md text-left ${className}`}
+      >
+        {children}
+      </Component>
+    );
+  }
+);
+
+DashboardCard.displayName = "DashboardCard";
 
 export function StatusBadge({ status }: { status: string }) {
   const variants: Record<string, string> = {
