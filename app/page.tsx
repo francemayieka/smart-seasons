@@ -41,13 +41,13 @@ export default async function Home() {
           <div className="mt-10 flex flex-col md:flex-row items-center gap-4 justify-center md:justify-start">
             <Link
               href="/auth/signup"
-              className="w-full md:w-auto rounded-full bg-emerald-400 px-10 py-4 text-center text-base font-semibold text-emerald-900 shadow-2xl hover:bg-white hover:scale-105 transition-all font-poppins uppercase"
+              className="w-full md:w-auto rounded-full bg-emerald-400 px-10 py-4 text-center text-base font-bold text-emerald-900 shadow-2xl hover:bg-white hover:scale-105 transition-all font-poppins uppercase"
             >
               Begin Journey
             </Link>
             <Link
               href="/dashboard"
-              className="w-full md:w-auto rounded-full bg-white/10 border border-white/20 px-10 py-4 text-center text-base font-semibold text-white hover:bg-white hover:text-emerald-900 transition-all font-poppins uppercase"
+              className="w-full md:w-auto rounded-full bg-white/10 border border-white/20 px-10 py-4 text-center text-base font-bold text-white hover:bg-white hover:text-emerald-900 transition-all font-poppins uppercase"
             >
               Access Portal
             </Link>
@@ -94,7 +94,7 @@ export default async function Home() {
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/10 text-white">
               <LeafIcon className="h-4 w-4" />
             </div>
-            <span className="text-lg font-semibold tracking-tighter font-poppins uppercase text-white">SmartSeasons</span>
+            <span className="text-lg font-semibold tracking-tighter font-poppins uppercase text-white">SMARTSEASONS</span>
           </div>
           <div className="text-center md:text-right">
             <p className="text-sm font-semibold text-emerald-100/50 font-poppins uppercase tracking-wider">

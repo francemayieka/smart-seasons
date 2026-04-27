@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { updateFieldAction } from "./actions";
-import { Badge } from "@/components/ui/badge";
+import { FieldCardShell } from "@/components/ui/field-card-shell";
+import { CloseIcon } from "@/components/ui/icons";
 
 interface FieldProps {
   field: {
@@ -50,27 +51,31 @@ export function AgentFieldItem({ field }: FieldProps) {
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm transition hover:shadow-md">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3">
-            <h3 className="text-lg sm:text-xl font-semibold text-slate-900 truncate max-w-[150px] sm:max-w-none">{field.name}</h3>
-            <Badge variant={field.status === "At Risk" ? "warning" : field.status === "Completed" ? "secondary" : "success"}>
-              {field.status}
-            </Badge>
-          </div>
-          <p className="mt-1 text-sm font-medium text-slate-500 font-roboto">
-            {field.cropType} &bull; Current Stage: <span className="text-emerald-600">{field.stage}</span>
-          </p>
-        </div>
-        
+    <FieldCardShell
+      name={field.name}
+      status={field.status}
+      cropType={field.cropType}
+      stage={field.stage}
+      actions={
         <button 
           onClick={() => setIsOpen(!isOpen)}
-          className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition whitespace-nowrap"
+          className={`flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all shadow-lg w-full sm:w-auto ${
+            isOpen 
+              ? "bg-slate-100 text-slate-700 hover:bg-slate-200 shadow-slate-100" 
+              : "bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-200"
+          }`}
         >
-          {isOpen ? "Close Form" : "Update Stage & Add Note"}
+          {isOpen ? (
+            <>
+              <CloseIcon className="h-4 w-4" />
+              <span>Close Form</span>
+            </>
+          ) : (
+            "Add Update"
+          )}
         </button>
-      </div>
+      }
+    >
 
       {isOpen && (
         <form onSubmit={handleSubmit} className="mt-6 border-t border-slate-100 pt-6 space-y-4">
@@ -148,22 +153,22 @@ export function AgentFieldItem({ field }: FieldProps) {
           <div className="space-y-3">
             {field.observations.map(obs => (
               <div key={obs.id} className="rounded-xl border border-slate-100 bg-slate-50/30 p-4 text-sm font-roboto">
-                <div className="flex flex-wrap justify-between items-center gap-2 mb-2">
-                  <span className="font-semibold text-slate-700 whitespace-nowrap underline underline-offset-4 decoration-emerald-200">Stage: {obs.stage}</span>
-                  <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-col gap-2 mb-3 sm:flex-row sm:justify-between sm:items-center">
+                  <span className="font-semibold text-slate-700 underline underline-offset-4 decoration-emerald-200">Stage: {obs.stage}</span>
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                     {obs.cropHealth && (
-                      <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 whitespace-nowrap">
+                      <span className="flex items-center gap-1.5 rounded-lg bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-600 border border-emerald-100">
                         <span className="h-1 w-1 rounded-full bg-emerald-500" />
-                        Health: {obs.cropHealth}
+                        {obs.cropHealth}
                       </span>
                     )}
                     {obs.soilCondition && (
-                      <span className="flex items-center gap-1 text-[10px] font-bold text-blue-600 whitespace-nowrap">
+                      <span className="flex items-center gap-1.5 rounded-lg bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-600 border border-blue-100">
                         <span className="h-1 w-1 rounded-full bg-blue-500" />
-                        Soil: {obs.soilCondition}
+                        {obs.soilCondition}
                       </span>
                     )}
-                    <span className="text-[10px] text-slate-400 whitespace-nowrap">{new Date(obs.createdAt).toLocaleDateString()}</span>
+                    <span className="text-[10px] font-medium text-slate-400 whitespace-nowrap ml-auto sm:ml-0">{new Date(obs.createdAt).toLocaleDateString()}</span>
                   </div>
                 </div>
                 <p className="text-slate-600 mb-1 leading-relaxed">{obs.note}</p>
@@ -172,6 +177,6 @@ export function AgentFieldItem({ field }: FieldProps) {
           </div>
         </div>
       )}
-    </div>
+    </FieldCardShell>
   );
 }

@@ -7,6 +7,7 @@ import { AuthCard } from "@/components/auth/auth-card";
 import { FormInput } from "@/components/auth/form-input";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/password-input";
+import { AuthShell } from "@/components/auth/auth-shell";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("");

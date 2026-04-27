@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { LeafIcon, MenuIcon, CloseIcon } from "@/components/ui/icons";
+import { LeafIcon } from "@/components/ui/icons";
 import { LogoutButton } from "@/components/logout-button";
+import { MobileMenuToggle } from "@/components/ui/mobile-menu-toggle";
 
 export function HomeNav({ session }: { session: any }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +16,7 @@ export function HomeNav({ session }: { session: any }) {
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-emerald-900 shadow-xl transition-transform group-hover:rotate-12">
             <LeafIcon className="h-6 w-6" />
           </div>
-          <span className="text-2xl font-semibold tracking-tighter font-poppins uppercase text-white">SmartSeasons</span>
+          <span className="text-2xl font-bold tracking-tight font-poppins uppercase text-white">SMARTSEASONS</span>
         </Link>
         
         {/* Desktop Menu */}
@@ -36,20 +37,20 @@ export function HomeNav({ session }: { session: any }) {
           ) : (
             <Link 
               href="/auth/signin"
-              className="rounded-full bg-emerald-400 px-8 py-2.5 text-sm font-semibold text-emerald-900 hover:bg-white shadow-xl transition-all font-poppins uppercase cursor-pointer"
+              className="rounded-full bg-emerald-400 px-8 py-2.5 text-sm font-bold text-emerald-900 hover:bg-white shadow-xl transition-all font-poppins uppercase cursor-pointer"
             >
-              Get Started
+              Dashboard
             </Link>
           )}
         </div>
 
         {/* Mobile Burger Toggle */}
-        <button 
-          onClick={() => setIsOpen(!isOpen)}
-          className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/20 bg-white/10 text-white md:hidden hover:bg-white/20 transition-all"
-        >
-          {isOpen ? <CloseIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
-        </button>
+        <MobileMenuToggle 
+          isOpen={isOpen} 
+          onClick={() => setIsOpen(!isOpen)} 
+          variant="glass" 
+          className="md:hidden"
+        />
       </div>
 
       {/* Mobile Menu Overlay */}
@@ -63,12 +64,11 @@ export function HomeNav({ session }: { session: any }) {
                 </div>
                 <span className="text-xl font-semibold tracking-tighter font-poppins uppercase text-white">SmartSeasons</span>
               </div>
-              <button 
-                onClick={() => setIsOpen(false)}
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-white"
-              >
-                <CloseIcon className="h-6 w-6" />
-              </button>
+              <MobileMenuToggle 
+                isOpen={true} 
+                onClick={() => setIsOpen(false)} 
+                variant="glass" 
+              />
             </div>
 
             <div className="flex flex-col gap-4">
@@ -105,16 +105,16 @@ export function HomeNav({ session }: { session: any }) {
                 <Link 
                   href="/auth/signin"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-center rounded-2xl bg-emerald-400 p-5 text-lg font-bold text-emerald-900 shadow-xl"
+                  className="flex items-center justify-center rounded-2xl bg-emerald-400 p-5 text-lg font-bold text-emerald-900 shadow-xl font-poppins uppercase"
                 >
-                  Get Started
+                  Dashboard
                 </Link>
               )}
             </div>
 
             <div className="mt-auto py-12 border-t border-white/5 text-center">
               <p className="text-sm font-semibold text-emerald-100/30 font-poppins uppercase tracking-[0.2em]">
-                Proudly crafted by Francis
+                Proudly crafted by France
               </p>
             </div>
           </div>

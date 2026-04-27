@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { AgentDashboardStats, AgentRecentUpdates } from "./DashboardComponents";
+import { DashboardContainer, PageHeader } from "@/components/ui/dashboard-ui";
 
 export default async function AgentDashboard() {
   const session = await getServerSession(authOptions);
@@ -11,11 +12,11 @@ export default async function AgentDashboard() {
   if (!session?.user?.id) return null;
 
   return (
-    <div className="mx-auto max-w-6xl w-full">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Agent Overview</h1>
-        <p className="mt-2 text-slate-600">Track your assigned fields and record critical crop observations.</p>
-      </div>
+    <DashboardContainer>
+      <PageHeader 
+        title="Agent Overview" 
+        description="Track your assigned fields and record critical crop observations."
+      />
 
       <Suspense fallback={
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-10 animate-pulse">
@@ -32,6 +33,6 @@ export default async function AgentDashboard() {
       }>
         <AgentRecentUpdates agentId={session.user.id} />
       </Suspense>
-    </div>
+    </DashboardContainer>
   );
 }

@@ -1,14 +1,20 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
 import { AdminFieldItem } from "./AdminFieldItem";
 import { getAdminFields } from "@/lib/data";
 import { SmartPrefetch } from "@/components/smart-prefetch";
+import { PageHeader, DashboardContainer, HybridGrid } from "@/components/ui/dashboard-ui";
 
 export default async function AdminFieldsPage({ 
   searchParams 
 }: { 
   searchParams: Promise<{ status?: string, page?: string }> 
 }) {
+  const session = await getServerSession(authOptions);
+  if (session?.user?.role !== "ADMIN") redirect("/");
+
   const { status, page } = await searchParams;
   const currentPage = parseInt(page || "1");
 
@@ -22,19 +28,12 @@ export default async function AdminFieldsPage({
   ];
 
   return (
-    <div className="mx-auto max-w-6xl w-full px-5 lg:px-0">
-      <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Fields Directory</h1>
-          <p className="mt-2 text-slate-600">View all registered fields and monitor updates from agents.</p>
-        </div>
-        <Link 
-          href="/admin/fields/new" 
-          className="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-8 py-3 text-sm font-semibold text-white hover:bg-emerald-700 transition shadow-lg shadow-emerald-200 w-full md:w-auto"
-        >
-          Add Field
-        </Link>
-      </div>
+    <DashboardContainer>
+      <PageHeader 
+        title="Fields Directory" 
+        description="View all registered fields and monitor updates from agents."
+        action={{ label: "Add Field", href: "/admin/fields/new" }}
+      />
 
       {/* Filter Tabs */}
       <div className="mb-8 flex flex-nowrap gap-2 p-1.5 bg-slate-100 rounded-2xl w-fit max-w-full overflow-x-auto no-scrollbar">
@@ -54,7 +53,7 @@ export default async function AdminFieldsPage({
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
+      <HybridGrid>
         {fieldsData.length === 0 ? (
           <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center text-slate-500 shadow-sm">
             No fields recorded yet.
@@ -93,7 +92,7 @@ export default async function AdminFieldsPage({
             )}
           </>
         )}
-      </div>
-    </div>
+      </HybridGrid>
+    </DashboardContainer>
   );
 }

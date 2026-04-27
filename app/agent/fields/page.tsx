@@ -4,6 +4,7 @@ import { AgentFieldItem } from "./AgentFieldItem";
 import Link from "next/link";
 import { getAgentFields } from "@/lib/data";
 import { SmartPrefetch } from "@/components/smart-prefetch";
+import { PageHeader, DashboardContainer, HybridGrid } from "@/components/ui/dashboard-ui";
 
 export default async function AgentFieldsPage({ 
   searchParams 
@@ -28,13 +29,11 @@ export default async function AgentFieldsPage({
   ];
 
   return (
-    <div className="mx-auto max-w-6xl w-full">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">My Fields</h1>
-          <p className="mt-2 text-slate-600">View and update your assigned fields.</p>
-        </div>
-      </div>
+    <DashboardContainer>
+      <PageHeader 
+        title="My Fields" 
+        description="View and update your assigned fields."
+      />
 
       {/* Filter Tabs */}
       <div className="mb-8 flex flex-nowrap gap-2 p-1.5 bg-slate-100 rounded-2xl w-fit max-w-full overflow-x-auto no-scrollbar">
@@ -55,45 +54,43 @@ export default async function AgentFieldsPage({
         ))}
       </div>
 
-      <div className="space-y-6">
+      <HybridGrid>
         {fieldsData.length === 0 ? (
-          <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center text-slate-500 shadow-sm">
+          <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center text-slate-500 shadow-sm col-span-full">
             You have no assigned fields yet.
           </div>
         ) : (
-          <>
-            {fieldsData.map(field => (
-              <AgentFieldItem key={field.id} field={{
-                id: field.id,
-                name: field.name,
-                cropType: field.cropType,
-                stage: field.currentStage,
-                status: field.status,
-                observations: field.observations,
-              }} />
-            ))}
-
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="mt-10 flex items-center justify-center gap-2">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                  <Link
-                    key={p}
-                    href={`/agent/fields?${status ? `status=${status}&` : ""}page=${p}`}
-                    className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold transition ${
-                      currentPage === p
-                        ? "bg-emerald-600 text-white shadow-lg shadow-emerald-100"
-                        : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
-                    }`}
-                  >
-                    {p}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </>
+          fieldsData.map(field => (
+            <AgentFieldItem key={field.id} field={{
+              id: field.id,
+              name: field.name,
+              cropType: field.cropType,
+              stage: field.currentStage,
+              status: field.status,
+              observations: field.observations,
+            }} />
+          ))
         )}
-      </div>
-    </div>
+      </HybridGrid>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="mt-10 flex items-center justify-center gap-2">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <Link
+              key={p}
+              href={`/agent/fields?${status ? `status=${status}&` : ""}page=${p}`}
+              className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold transition ${
+                currentPage === p
+                  ? "bg-emerald-600 text-white shadow-lg shadow-emerald-100"
+                  : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+              }`}
+            >
+              {p}
+            </Link>
+          ))}
+        </div>
+      )}
+    </DashboardContainer>
   );
 }

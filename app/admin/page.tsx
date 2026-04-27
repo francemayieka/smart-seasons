@@ -3,17 +3,18 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { DashboardStats, DashboardUpdates } from "./DashboardComponents";
+import { PageHeader, DashboardContainer } from "@/components/ui/dashboard-ui";
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
   if (session?.user?.role !== "ADMIN") redirect("/");
 
   return (
-    <div className="mx-auto max-w-6xl w-full">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Dashboard Overview</h1>
-        <p className="mt-2 text-slate-600">Monitor all fields, review agent performance, and validate field status.</p>
-      </div>
+    <DashboardContainer>
+      <PageHeader 
+        title="Dashboard Overview" 
+        description="Monitor all fields, review agent performance, and validate field status."
+      />
 
       <Suspense fallback={
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-10 animate-pulse">
@@ -30,6 +31,6 @@ export default async function AdminDashboard() {
       }>
         <DashboardUpdates />
       </Suspense>
-    </div>
+    </DashboardContainer>
   );
 }

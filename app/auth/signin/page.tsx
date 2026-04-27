@@ -5,7 +5,7 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { AuthCard } from "@/components/auth/auth-card";
+import { AuthShell } from "@/components/auth/auth-shell";
 import { FormInput } from "@/components/auth/form-input";
 import { PasswordInput } from "@/components/ui/password-input";
 
@@ -83,7 +83,7 @@ function SignInForm() {
 
 export default function SignInPage() {
   return (
-    <AuthCard title="Sign In" subtitle="Access your dashboard">
+    <AuthShell title="Welcome Back" subtitle="Sign in to your account to manage your fields.">
       <Suspense fallback={<div className="h-40 animate-pulse bg-slate-100 rounded-2xl" />}>
         <SignInForm />
       </Suspense>
@@ -101,6 +101,6 @@ export default function SignInPage() {
           </Link>
         </div>
       </div>
-    </AuthCard>
+    </AuthShell>
   );
 }

@@ -2,10 +2,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChartIcon, FieldIcon, UserIcon, LeafIcon, MenuIcon, CloseIcon } from "@/components/ui/icons";
+import { ChartIcon, FieldIcon, UserIcon, LeafIcon } from "@/components/ui/icons";
 import { LogoutButton } from "@/components/logout-button";
 import { useSession } from "next-auth/react";
 import { SmartPrefetch } from "@/components/smart-prefetch";
+import { MobileMenuToggle } from "@/components/ui/mobile-menu-toggle";
 
 type NavLink = {
   name: string;
@@ -55,14 +56,14 @@ export function DashboardLayout({
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-emerald-900 shadow-lg">
               <LeafIcon className="h-5 w-5" />
             </div>
-            <span className="text-lg font-semibold tracking-tighter text-white font-poppins uppercase">SmartSeasons</span>
+            <span className="text-lg font-semibold tracking-tighter text-white font-poppins uppercase">SMARTSEASONS</span>
           </Link>
-          <button 
-            onClick={() => setIsSidebarOpen(false)}
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-emerald-400 hover:bg-emerald-800 lg:hidden"
-          >
-            <CloseIcon className="h-5 w-5" />
-          </button>
+          <MobileMenuToggle 
+            isOpen={true} 
+            onClick={() => setIsSidebarOpen(false)} 
+            variant="glass" 
+            className="lg:hidden"
+          />
         </div>
         
         <div className="flex-1 overflow-y-auto py-6">
@@ -128,12 +129,11 @@ export function DashboardLayout({
             </div>
             <span className="font-semibold tracking-tighter text-white font-poppins uppercase text-sm">SmartSeasons</span>
           </Link>
-          <button 
-            onClick={() => setIsSidebarOpen(true)}
-            className="flex h-10 w-10 items-center justify-center rounded-2xl border border-emerald-700 bg-emerald-800 text-emerald-400 shadow-lg"
-          >
-            <MenuIcon className="h-6 w-6" />
-          </button>
+          <MobileMenuToggle 
+            isOpen={isSidebarOpen} 
+            onClick={() => setIsSidebarOpen(true)} 
+            variant="emerald" 
+          />
         </header>
 
         <main className="flex-1">
