@@ -53,7 +53,7 @@ export function UpdateList({ updates, title }: { updates: UpdateItem[], title: s
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-sm font-bold text-slate-900 truncate">{update.fieldName}</p>
+                    <p className="text-sm font-bold text-slate-900 break-words">{update.fieldName}</p>
                     <span className="text-[10px] font-medium uppercase tracking-wider text-slate-400 shrink-0">
                       {new Date(update.date).toLocaleDateString()}
                     </span>
@@ -61,7 +61,7 @@ export function UpdateList({ updates, title }: { updates: UpdateItem[], title: s
                   <p className="text-xs text-slate-500 mb-1">
                     {update.agentName ? `Updated by ${update.agentName} \u2022 ` : ""}Stage: {update.stage}
                   </p>
-                  <p className="text-sm text-slate-600 line-clamp-2">{update.note}</p>
+                  <p className="text-sm text-slate-600 leading-relaxed break-words">{update.note}</p>
                 </div>
               </div>
             ))}
