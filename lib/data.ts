@@ -7,7 +7,7 @@ export const getDashboardStats = unstable_cache(
     const [totalFields, atRiskFields, totalAgents, latestObservations] = await Promise.all([
       prisma.field.count(),
       prisma.field.count({ where: { status: "AtRisk" } }),
-      prisma.user.count({ where: { role: "AGENT" } }),
+      prisma.user.count({ where: { role: "AGENT", agentStatus: "ACTIVE" } }),
       prisma.observation.findMany({
         take: 5,
         orderBy: { createdAt: "desc" },
@@ -17,7 +17,7 @@ export const getDashboardStats = unstable_cache(
     return { totalFields, atRiskFields, totalAgents, latestObservations };
   },
   ["dashboard-stats"],
-  { tags: ["dashboard"] } // Infinite cache, only invalidated by "dashboard" tag
+  { tags: ["dashboard"], revalidate: 10 }
 );
 
 // Cache for fields directory
@@ -48,7 +48,7 @@ export const getAdminFields = unstable_cache(
     return { fields, total, totalPages: Math.ceil(total / pageSize) };
   },
   ["admin-fields"],
-  { tags: ["fields"] }
+  { tags: ["fields"], revalidate: 10 }
 );
 
 // Cache for agents
@@ -68,7 +68,7 @@ export const getAdminAgents = unstable_cache(
     });
   },
   ["admin-agents"],
-  { tags: ["agents"] }
+  { tags: ["agents"], revalidate: 10 }
 );
 
 // Cache for specific agent stats
@@ -87,7 +87,7 @@ export const getAgentStats = unstable_cache(
     return { totalFields, atRiskFields, latestObservations };
   },
   ["agent-stats"],
-  { tags: ["agent-dashboard"] }
+  { tags: ["agent-dashboard"], revalidate: 10 }
 );
 
 // Cache for an agent's assigned fields
@@ -120,5 +120,5 @@ export const getAgentFields = unstable_cache(
     return { fields, total, totalPages: Math.ceil(total / pageSize) };
   },
   ["agent-fields"],
-  { tags: ["agent-fields"] }
+  { tags: ["agent-fields"], revalidate: 10 }
 );
