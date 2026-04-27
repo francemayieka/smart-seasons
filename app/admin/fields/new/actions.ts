@@ -2,7 +2,9 @@
 
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag as nextRevalidateTag } from "next/cache";
+
+const revalidateTag = nextRevalidateTag as any;
 
 import { requireAdmin } from "@/lib/auth-utils";
 
@@ -31,8 +33,8 @@ export async function createFieldAction(formData: FormData) {
       },
     });
 
-    revalidateTag("fields", "max", "max");
-    revalidateTag("dashboard", "max", "max");
+    revalidateTag("fields", "max");
+    revalidateTag("dashboard", "max");
     revalidatePath("/admin/fields");
   } catch (error) {
     console.error("Failed to create field:", error);

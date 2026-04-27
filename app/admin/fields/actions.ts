@@ -1,7 +1,9 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag as nextRevalidateTag } from "next/cache";
+
+const revalidateTag = nextRevalidateTag as any;
 import { requireAdmin } from "@/lib/auth-utils";
 
 export async function assignFieldToAgent(fieldId: string, agentId: string | null) {
@@ -39,10 +41,10 @@ export async function assignFieldToAgent(fieldId: string, agentId: string | null
     });
 
     // Invalidate everything relevant
-    revalidateTag("fields", "max", "max");
-    revalidateTag("dashboard", "max", "max");
-    revalidateTag("agents", "max", "max");
-    if (agentId) revalidateTag(`agent-fields-${agentId}`, "max", "max");
+    revalidateTag("fields", "max");
+    revalidateTag("dashboard", "max");
+    revalidateTag("agents", "max");
+    if (agentId) revalidateTag(`agent-fields-${agentId}`, "max");
     
     revalidatePath("/admin/fields");
     revalidatePath("/admin/agents");

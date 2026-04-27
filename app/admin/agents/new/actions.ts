@@ -3,7 +3,9 @@
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag as nextRevalidateTag } from "next/cache";
+
+const revalidateTag = nextRevalidateTag as any;
 
 export async function createAgentAction(formData: FormData) {
   const name = formData.get("name") as string;
@@ -32,8 +34,8 @@ export async function createAgentAction(formData: FormData) {
     },
   });
 
-  revalidateTag("agents", "max", "max");
-  revalidateTag("dashboard", "max", "max");
+  revalidateTag("agents", "max");
+  revalidateTag("dashboard", "max");
   revalidatePath("/admin/agents");
 
   return { success: true, generatedPassword };

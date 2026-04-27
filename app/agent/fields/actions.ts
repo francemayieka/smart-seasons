@@ -3,7 +3,9 @@
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag as nextRevalidateTag } from "next/cache";
+
+const revalidateTag = nextRevalidateTag as any;
 import { Stage, Status } from "@prisma/client";
 
 async function evaluateFieldStatus(
@@ -135,11 +137,11 @@ export async function updateFieldAction(formData: FormData) {
       });
     });
 
-    revalidateTag("fields", "max", "max");
-    revalidateTag("dashboard", "max", "max");
-    revalidateTag("agents", "max", "max");
-    revalidateTag(`agent-fields-${session.user.id}`, "max", "max");
-    revalidateTag(`agent-dashboard-${session.user.id}`, "max", "max");
+    revalidateTag("fields", "max");
+    revalidateTag("dashboard", "max");
+    revalidateTag("agents", "max");
+    revalidateTag(`agent-fields-${session.user.id}`, "max");
+    revalidateTag(`agent-dashboard-${session.user.id}`, "max");
     
     revalidatePath("/agent/fields");
     revalidatePath("/admin/fields");

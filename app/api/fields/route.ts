@@ -58,10 +58,11 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  const { revalidateTag, revalidatePath } = await import("next/cache");
-  revalidateTag("fields", "max", "max");
-  revalidateTag("dashboard", "max", "max");
-  if (agentId) revalidateTag(`agent-fields-${agentId}`, "max", "max");
+  const { revalidateTag: nextRevalidateTag, revalidatePath } = await import("next/cache");
+  const revalidateTag = nextRevalidateTag as any;
+  revalidateTag("fields", "max");
+  revalidateTag("dashboard", "max");
+  if (agentId) revalidateTag(`agent-fields-${agentId}`, "max");
   revalidatePath("/admin/fields");
 
   return NextResponse.json(field);

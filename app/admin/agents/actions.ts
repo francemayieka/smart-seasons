@@ -1,7 +1,9 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag as nextRevalidateTag } from "next/cache";
+
+const revalidateTag = nextRevalidateTag as any;
 import { requireAdmin } from "@/lib/auth-utils";
 
 export async function updateAgentStatus(agentId: string, status: "PENDING" | "ACTIVE" | "FORMER") {
@@ -43,11 +45,11 @@ export async function updateAgentStatus(agentId: string, status: "PENDING" | "AC
       return user;
     });
 
-    revalidateTag("agents", "max", "max");
-    revalidateTag("fields", "max", "max");
-    revalidateTag("dashboard", "max", "max");
-    revalidateTag(`agent-dashboard-${agentId}`, "max", "max");
-    revalidateTag(`agent-fields-${agentId}`, "max", "max");
+    revalidateTag("agents", "max");
+    revalidateTag("fields", "max");
+    revalidateTag("dashboard", "max");
+    revalidateTag(`agent-dashboard-${agentId}`, "max");
+    revalidateTag(`agent-fields-${agentId}`, "max");
     
     // Hard refresh paths
     revalidatePath("/admin/agents");

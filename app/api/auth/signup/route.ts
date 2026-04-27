@@ -56,9 +56,10 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    const { revalidateTag } = await import("next/cache");
-    revalidateTag("agents", "max", "max");
-    revalidateTag("dashboard", "max", "max");
+    const { revalidateTag: nextRevalidateTag } = await import("next/cache");
+    const revalidateTag = nextRevalidateTag as any;
+    revalidateTag("agents", "max");
+    revalidateTag("dashboard", "max");
 
     return NextResponse.json({ message: "User created successfully" }, { status: 201 });
   } catch (error) {
