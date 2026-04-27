@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { AgentDashboardStats, AgentRecentUpdates } from "./DashboardComponents";
 import { DashboardContainer, PageHeader } from "@/components/ui/dashboard-ui";
 
+export const dynamic = "force-dynamic";
+
 export default async function AgentDashboard() {
   const session = await getServerSession(authOptions);
   

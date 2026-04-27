@@ -1,7 +1,7 @@
 import { prisma } from "./prisma";
 import { unstable_cache } from "next/cache";
 
-// Cache for dashboard stats
+// Cache for dashboard stats - 60s revalidate for performance with tags for instant flushing
 export const getDashboardStats = unstable_cache(
   async () => {
     const [totalFields, atRiskFields, totalAgents, latestObservations] = await Promise.all([
@@ -17,17 +17,26 @@ export const getDashboardStats = unstable_cache(
     return { totalFields, atRiskFields, totalAgents, latestObservations };
   },
   ["dashboard-stats"],
-  { tags: ["dashboard"], revalidate: 10 }
+  { tags: ["dashboard", "agents", "fields"], revalidate: 60 }
 );
 
-// Cache for fields directory
-export const getAdminFields = unstable_cache(
-  async (status?: string, page: number = 1, pageSize: number = 10) => {
+// Cache for fields directory - Isolated by filters and search
+export const getAdminFields = (status?: string, page: number = 1, pageSize: number = 10, search?: string) => unstable_cache(
+  async () => {
     const skip = (page - 1) * pageSize;
     
+    const where: any = {};
+    if (status) where.status = status;
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { cropType: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
     const [fields, total] = await Promise.all([
       prisma.field.findMany({
-        where: status ? { status: status as any } : undefined,
+        where,
         include: { 
           agent: true,
           observations: {
@@ -40,40 +49,66 @@ export const getAdminFields = unstable_cache(
         skip,
         take: pageSize,
       }),
-      prisma.field.count({
-        where: status ? { status: status as any } : undefined,
-      })
+      prisma.field.count({ where })
     ]);
 
     return { fields, total, totalPages: Math.ceil(total / pageSize) };
   },
-  ["admin-fields"],
-  { tags: ["fields"], revalidate: 10 }
-);
+  ["admin-fields", status || "all", page.toString(), search || ""],
+  { tags: ["fields", "admin-directory"], revalidate: 3600 }
+)();
 
-// Cache for agents
-export const getAdminAgents = unstable_cache(
-  async (status?: string) => {
+// Cache for agents directory - Isolated by filters and search
+export const getAdminAgents = (status?: string, search?: string) => unstable_cache(
+  async () => {
+    const where: any = { role: "AGENT" };
+    if (status) where.agentStatus = status.toUpperCase();
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { email: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
     return prisma.user.findMany({
-      where: { 
-        role: "AGENT",
-        agentStatus: status ? (status.toUpperCase() as any) : undefined
-      },
+      where,
       orderBy: { createdAt: "desc" },
       include: {
         _count: {
           select: { fields: true, observations: true }
+        },
+        fields: {
+          include: {
+            observations: {
+              orderBy: { createdAt: "desc" },
+              take: 3
+            }
+          }
+        },
+        observations: {
+          take: 20,
+          orderBy: { createdAt: "desc" },
+          select: {
+            field: {
+              include: {
+                observations: {
+                  orderBy: { createdAt: "desc" },
+                  take: 1
+                }
+              }
+            }
+          }
         }
       }
     });
   },
-  ["admin-agents"],
-  { tags: ["agents"], revalidate: 10 }
-);
+  ["admin-agents", status || "all", search || ""],
+  { tags: ["agents", "admin-directory"], revalidate: 3600 }
+)();
 
-// Cache for specific agent stats
-export const getAgentStats = unstable_cache(
-  async (agentId: string) => {
+// Cache for specific agent stats - Isolated by Agent ID
+export const getAgentStats = (agentId: string) => unstable_cache(
+  async () => {
     const [totalFields, atRiskFields, latestObservations] = await Promise.all([
       prisma.field.count({ where: { agentId } }),
       prisma.field.count({ where: { agentId, status: "AtRisk" } }),
@@ -86,20 +121,27 @@ export const getAgentStats = unstable_cache(
     ]);
     return { totalFields, atRiskFields, latestObservations };
   },
-  ["agent-stats"],
-  { tags: ["agent-dashboard"], revalidate: 10 }
-);
+  [`agent-stats-${agentId}`],
+  { tags: [`agent-dashboard-${agentId}`, "fields"], revalidate: 3600 }
+)();
 
-// Cache for an agent's assigned fields
-export const getAgentFields = unstable_cache(
-  async (agentId: string, status?: string, page: number = 1, pageSize: number = 10) => {
+// Cache for an agent's assigned fields - Isolated by Agent ID
+export const getAgentFields = (agentId: string, status?: string, page: number = 1, pageSize: number = 10, search?: string) => unstable_cache(
+  async () => {
     const skip = (page - 1) * pageSize;
+    
+    const where: any = { agentId };
+    if (status) where.status = status as any;
+    if (search) {
+      where.OR = [
+        { name: { contains: search, mode: "insensitive" } },
+        { cropType: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
     const [fields, total] = await Promise.all([
       prisma.field.findMany({
-        where: { 
-          agentId,
-          status: status ? (status as any) : undefined
-        },
+        where,
         include: { 
           observations: {
             orderBy: { createdAt: "desc" },
@@ -110,15 +152,10 @@ export const getAgentFields = unstable_cache(
         skip,
         take: pageSize,
       }),
-      prisma.field.count({ 
-        where: { 
-          agentId,
-          status: status ? (status as any) : undefined
-        } 
-      })
+      prisma.field.count({ where })
     ]);
     return { fields, total, totalPages: Math.ceil(total / pageSize) };
   },
-  ["agent-fields"],
-  { tags: ["agent-fields"], revalidate: 10 }
-);
+  [`agent-fields-${agentId}`, status || "all", page.toString(), search || ""],
+  { tags: [`agent-fields-${agentId}`, "fields"], revalidate: 3600 }
+)();

@@ -31,8 +31,8 @@ export async function createFieldAction(formData: FormData) {
       },
     });
 
-    revalidateTag("fields", "default");
-    revalidateTag("dashboard", "default");
+    revalidateTag("fields", "max", "max");
+    revalidateTag("dashboard", "max", "max");
     revalidatePath("/admin/fields");
   } catch (error) {
     console.error("Failed to create field:", error);

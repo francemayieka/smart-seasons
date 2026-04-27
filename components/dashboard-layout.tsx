@@ -5,8 +5,11 @@ import { usePathname } from "next/navigation";
 import { ChartIcon, FieldIcon, UserIcon, LeafIcon } from "@/components/ui/icons";
 import { LogoutButton } from "@/components/logout-button";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { SmartPrefetch } from "@/components/smart-prefetch";
 import { MobileMenuToggle } from "@/components/ui/mobile-menu-toggle";
+import { revalidateCoreData } from "@/lib/revalidate-action";
+import { useEffect, useCallback } from "react";
 
 type NavLink = {
   name: string;
@@ -24,8 +27,46 @@ export function DashboardLayout({
   roleLabel: string;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { data: session, status } = useSession();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Real-time Sync Logic
+  const syncData = useCallback(() => {
+    if (status === "authenticated") {
+      router.refresh();
+      console.log("Background sync: Data refreshed from server.");
+    }
+  }, [status, router]);
+
+  // Smart Revalidation on login
+  useEffect(() => {
+    if (status === "authenticated" && session?.user?.id) {
+      const hasRevalidated = sessionStorage.getItem(`revalidated-${session.user.id}`);
+      if (!hasRevalidated) {
+        revalidateCoreData(session.user.id).then(() => {
+          sessionStorage.setItem(`revalidated-${session.user.id}`, "true");
+          syncData();
+        });
+      }
+    }
+  }, [status, session?.user?.id, syncData]);
+
+  // Sync on Focus & Heartbeat
+  useEffect(() => {
+    if (status !== "authenticated") return;
+
+    // Focus Sync: Refresh when user returns to tab
+    window.addEventListener("focus", syncData);
+    
+    // Heartbeat Sync: Refresh every 10 seconds for active users
+    const heartbeat = setInterval(syncData, 10000);
+
+    return () => {
+      window.removeEventListener("focus", syncData);
+      clearInterval(heartbeat);
+    };
+  }, [status, syncData]);
 
   if (status === "loading") {
     return (
@@ -136,10 +177,24 @@ export function DashboardLayout({
           />
         </header>
 
-        <main className="flex-1 w-full min-w-0 overflow-x-hidden">
-          <div className="h-full w-full max-w-full px-6 py-8 sm:px-8 lg:px-10 lg:py-12">
+        <main className="flex-1 w-full min-w-0 overflow-x-hidden flex flex-col">
+          <div className="flex-1 w-full max-w-full px-6 py-8 sm:px-8 lg:px-10 lg:py-12">
             {children}
           </div>
+          
+          <footer className="mt-auto w-full px-6 py-8 sm:px-8 lg:px-10 border-t border-slate-200 bg-white/50 backdrop-blur-sm">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="flex items-center gap-2">
+                <div className="h-6 w-6 rounded-lg bg-emerald-600 flex items-center justify-center">
+                  <LeafIcon className="h-3.5 w-3.5 text-white" />
+                </div>
+                <span className="text-xs font-bold text-slate-900 tracking-tighter uppercase font-poppins">SMARTSEASONS</span>
+              </div>
+              <p className="text-[10px] sm:text-xs font-medium text-slate-500">
+                &copy; {new Date().getFullYear()} All rights reserved. <span className="mx-2 text-slate-200">|</span> Proudly crafted by <span className="font-bold text-emerald-600">France</span>
+              </p>
+            </div>
+          </footer>
         </main>
       </div>
     </div>

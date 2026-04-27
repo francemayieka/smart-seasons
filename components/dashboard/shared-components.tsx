@@ -71,3 +71,66 @@ export function UpdateList({ updates, title }: { updates: UpdateItem[], title: s
     </div>
   );
 }
+
+interface ObservationItemProps {
+  stage: string;
+  note: string;
+  createdAt: Date | string;
+  agentName?: string;
+  cropHealth?: string | null;
+  soilCondition?: string | null;
+}
+
+export function ObservationItem({ stage, note, createdAt, agentName, cropHealth, soilCondition }: ObservationItemProps) {
+  return (
+    <div className="rounded-xl bg-slate-50 p-4 text-sm max-w-full">
+      <div className="flex flex-col gap-2 mb-2 md:flex-row md:justify-between md:items-center max-w-full">
+        <span className="font-semibold text-slate-700">Stage: {stage}</span>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 max-w-full">
+          {cropHealth && (
+            <span className="flex items-center gap-1.5 rounded-lg bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-600 border border-emerald-100">
+              <span className="h-1 w-1 rounded-full bg-emerald-500" />
+              {cropHealth}
+            </span>
+          )}
+          {soilCondition && (
+            <span className="flex items-center gap-1.5 rounded-lg bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-600 border border-blue-100">
+              <span className="h-1 w-1 rounded-full bg-blue-500" />
+              {soilCondition}
+            </span>
+          )}
+          <span className="text-[10px] font-medium text-slate-400 ml-auto sm:ml-0">{new Date(createdAt).toLocaleDateString()}</span>
+        </div>
+      </div>
+      <p className="text-slate-600 mb-2 leading-relaxed break-words">{note}</p>
+      {agentName && <p className="text-xs font-medium text-slate-400">Recorded by: {agentName}</p>}
+    </div>
+  );
+}
+
+interface CardActionGroupProps {
+  label: string;
+  control: React.ReactNode;
+  toggleLabel?: string;
+  isOpen?: boolean;
+  onToggle?: () => void;
+}
+
+export function CardActionGroup({ label, control, toggleLabel, isOpen, onToggle }: CardActionGroupProps) {
+  return (
+    <div className="flex flex-col gap-3 w-full sm:w-64">
+      <div className="flex flex-col gap-1">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">{label}</span>
+        {control}
+      </div>
+      {onToggle && (
+        <button 
+          onClick={onToggle}
+          className="w-full rounded-xl bg-slate-100 px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-200 transition"
+        >
+          {isOpen ? `Hide ${toggleLabel || "History"}` : `View ${toggleLabel || "History"}`}
+        </button>
+      )}
+    </div>
+  );
+}

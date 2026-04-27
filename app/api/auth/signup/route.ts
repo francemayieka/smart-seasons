@@ -56,6 +56,10 @@ export async function POST(request: NextRequest) {
       }
     });
 
+    const { revalidateTag } = await import("next/cache");
+    revalidateTag("agents", "max", "max");
+    revalidateTag("dashboard", "max", "max");
+
     return NextResponse.json({ message: "User created successfully" }, { status: 201 });
   } catch (error) {
     if (error instanceof ZodError) {

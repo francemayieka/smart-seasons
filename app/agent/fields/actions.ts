@@ -135,11 +135,14 @@ export async function updateFieldAction(formData: FormData) {
       });
     });
 
-    revalidateTag("agent-fields", "default");
-    revalidateTag("agent-dashboard", "default");
-    revalidateTag("dashboard", "default");
-    revalidateTag("fields", "default");
+    revalidateTag("fields", "max", "max");
+    revalidateTag("dashboard", "max", "max");
+    revalidateTag("agents", "max", "max");
+    revalidateTag(`agent-fields-${session.user.id}`, "max", "max");
+    revalidateTag(`agent-dashboard-${session.user.id}`, "max", "max");
+    
     revalidatePath("/agent/fields");
+    revalidatePath("/admin/fields");
     revalidatePath("/admin");
     return { success: true };
   } catch (error) {

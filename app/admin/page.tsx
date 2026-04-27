@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { DashboardStats, DashboardUpdates } from "./DashboardComponents";
 import { PageHeader, DashboardContainer } from "@/components/ui/dashboard-ui";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
   if (session?.user?.role !== "ADMIN") redirect("/");

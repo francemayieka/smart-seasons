@@ -50,8 +50,13 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        if (user.role === "AGENT" && user.agentStatus !== "ACTIVE" && !user.forcePasswordChange) {
-          throw new Error("Your account is pending admin approval or has been deactivated.");
+        if (user.role === "AGENT") {
+          if (user.agentStatus === "FORMER") {
+            throw new Error("Your account has been deactivated. Please contact administration.");
+          }
+          if (user.agentStatus === "PENDING" && !user.forcePasswordChange) {
+            throw new Error("Your account is pending admin approval.");
+          }
         }
 
         return {
@@ -59,38 +64,41 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           email: user.email,
           role: user.role,
+          agentStatus: user.agentStatus,
           forcePasswordChange: user.forcePasswordChange,
         };
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }): Promise<any> {
       // Initial sign in
       if (user) {
         token.role = (user as any).role;
+        token.agentStatus = (user as any).agentStatus;
         token.forcePasswordChange = (user as any).forcePasswordChange;
         return token;
       }
 
-      // If token exists but role is missing, try to fetch it from DB
-      if (!token.role) {
-        const dbUser = await prisma.user.findUnique({
-          where: { id: token.sub },
-          select: { role: true, forcePasswordChange: true }
-        });
-        
-        if (dbUser) {
-          token.role = dbUser.role;
-          token.forcePasswordChange = dbUser.forcePasswordChange;
-        }
+      // Periodically verify user status for security
+      const dbUser = await prisma.user.findUnique({
+        where: { id: token.sub },
+        select: { role: true, agentStatus: true, forcePasswordChange: true }
+      });
+      
+      if (!dbUser || (dbUser.role === "AGENT" && dbUser.agentStatus === "FORMER")) {
+        return {}; // Return empty token to effectively clear session
       }
+      
+      token.role = dbUser.role;
+      token.agentStatus = dbUser.agentStatus;
+      token.forcePasswordChange = dbUser.forcePasswordChange;
 
       return token;
     },
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.sub!;
+      if (token && token.sub) {
+        session.user.id = token.sub;
         session.user.role = token.role as string;
         session.user.forcePasswordChange = token.forcePasswordChange as boolean;
       }

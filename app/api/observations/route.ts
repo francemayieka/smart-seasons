@@ -36,5 +36,15 @@ export async function POST(request: NextRequest) {
     data: { currentStage: stage },
   });
 
+  const { revalidateTag, revalidatePath } = await import("next/cache");
+  revalidateTag("fields", "max", "max");
+  revalidateTag("dashboard", "max", "max");
+  revalidateTag("agents", "max", "max");
+  revalidateTag(`agent-fields-${session.user.id}`, "max", "max");
+  revalidateTag(`agent-dashboard-${session.user.id}`, "max", "max");
+  revalidatePath("/admin/fields");
+  revalidatePath("/admin/agents");
+  revalidatePath("/agent/fields");
+
   return NextResponse.json(observation);
 }

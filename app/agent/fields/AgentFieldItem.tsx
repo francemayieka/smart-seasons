@@ -5,6 +5,7 @@ import { updateFieldAction } from "./actions";
 import { FieldCardShell } from "@/components/ui/field-card-shell";
 import { CloseIcon } from "@/components/ui/icons";
 import { useClickAway } from "@/hooks/use-click-away";
+import { ObservationItem } from "@/components/dashboard/shared-components";
 
 interface FieldProps {
   field: {
@@ -26,6 +27,7 @@ interface FieldProps {
 
 export function AgentFieldItem({ field }: FieldProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -60,23 +62,35 @@ export function AgentFieldItem({ field }: FieldProps) {
       cropType={field.cropType}
       stage={field.stage}
       actions={
-        <button 
-          onClick={() => setIsOpen(!isOpen)}
-          className={`flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all shadow-lg w-full sm:w-auto ${
-            isOpen 
-              ? "bg-slate-100 text-slate-700 hover:bg-slate-200 shadow-slate-100" 
-              : "bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-200"
-          }`}
-        >
-          {isOpen ? (
-            <>
-              <CloseIcon className="h-4 w-4" />
-              <span>Close Form</span>
-            </>
-          ) : (
-            "Add Update"
-          )}
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <button 
+            onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+            className={`flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all w-full sm:w-auto border ${
+              isHistoryOpen 
+                ? "bg-white text-slate-700 border-slate-200" 
+                : "bg-slate-50 text-slate-500 border-transparent hover:bg-slate-100"
+            }`}
+          >
+            {isHistoryOpen ? "Hide History" : `View History (${field.observations.length})`}
+          </button>
+          <button 
+            onClick={() => setIsOpen(!isOpen)}
+            className={`flex items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all shadow-lg w-full sm:w-auto ${
+              isOpen 
+                ? "bg-slate-100 text-slate-700 hover:bg-slate-200 shadow-slate-100" 
+                : "bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-200"
+            }`}
+          >
+            {isOpen ? (
+              <>
+                <CloseIcon className="h-4 w-4" />
+                <span>Close Form</span>
+              </>
+            ) : (
+              "Add Update"
+            )}
+          </button>
+        </div>
       }
     >
 
@@ -150,33 +164,23 @@ export function AgentFieldItem({ field }: FieldProps) {
         </form>
       )}
 
-      {field.observations.length > 0 && (
-        <div className="mt-6 border-t border-slate-100 pt-4">
-          <h4 className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-3 font-poppins">Recent Observations</h4>
+      {isHistoryOpen && (
+        <div className="mt-6 border-t border-slate-100 pt-6">
+          <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-5 text-left">Recent Assignment History</h4>
           <div className="space-y-3">
             {field.observations.map(obs => (
-              <div key={obs.id} className="rounded-xl border border-slate-100 bg-slate-50/30 p-4 text-sm font-roboto">
-                <div className="flex flex-col gap-2 mb-3 sm:flex-row sm:justify-between sm:items-center">
-                  <span className="font-semibold text-slate-700 underline underline-offset-4 decoration-emerald-200 text-left shrink-0">Stage: {obs.stage}</span>
-                  <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                    {obs.cropHealth && (
-                      <span className="flex items-center gap-1.5 rounded-lg bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-600 border border-emerald-100">
-                        <span className="h-1 w-1 rounded-full bg-emerald-500" />
-                        {obs.cropHealth}
-                      </span>
-                    )}
-                    {obs.soilCondition && (
-                      <span className="flex items-center gap-1.5 rounded-lg bg-blue-50 px-2 py-1 text-[10px] font-bold text-blue-600 border border-blue-100">
-                        <span className="h-1 w-1 rounded-full bg-blue-500" />
-                        {obs.soilCondition}
-                      </span>
-                    )}
-                    <span className="text-[10px] font-medium text-slate-400 ml-auto sm:ml-0">{new Date(obs.createdAt).toLocaleDateString()}</span>
-                  </div>
-                </div>
-                <p className="text-slate-600 mb-1 leading-relaxed text-left">{obs.note}</p>
-              </div>
+              <ObservationItem
+                key={obs.id}
+                stage={obs.stage}
+                note={obs.note}
+                createdAt={obs.createdAt}
+                cropHealth={obs.cropHealth}
+                soilCondition={obs.soilCondition}
+              />
             ))}
+            {field.observations.length === 0 && (
+              <p className="text-[10px] text-slate-400 italic px-1 text-left">No updates recorded for this assignment yet.</p>
+            )}
           </div>
         </div>
       )}

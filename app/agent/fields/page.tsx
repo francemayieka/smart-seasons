@@ -5,13 +5,16 @@ import Link from "next/link";
 import { getAgentFields } from "@/lib/data";
 import { SmartPrefetch } from "@/components/smart-prefetch";
 import { PageHeader, DashboardContainer, HybridGrid } from "@/components/ui/dashboard-ui";
+import { SearchBar } from "@/components/ui/search-bar";
+
+export const dynamic = "force-dynamic";
 
 export default async function AgentFieldsPage({ 
   searchParams 
 }: { 
-  searchParams: Promise<{ status?: string, page?: string }> 
+  searchParams: Promise<{ status?: string, page?: string, q?: string }> 
 }) {
-  const { status, page } = await searchParams;
+  const { status, page, q } = await searchParams;
   const currentPage = parseInt(page || "1");
   const session = await getServerSession(authOptions);
 
@@ -19,7 +22,7 @@ export default async function AgentFieldsPage({
     return <div className="p-8 text-center text-red-500">Not authenticated.</div>;
   }
 
-  const { fields: fieldsData, totalPages } = await getAgentFields(session.user.id, status, currentPage);
+  const { fields: fieldsData, totalPages } = await getAgentFields(session.user.id, status, currentPage, 10, q);
 
   const filterOptions = [
     { label: "All", value: "" },
@@ -35,22 +38,25 @@ export default async function AgentFieldsPage({
         description="View and update your assigned fields."
       />
 
-      {/* Filter Tabs */}
-      <div className="mb-8 flex flex-nowrap gap-1 md:gap-4 lg:gap-6 p-1 bg-slate-100/50 rounded-2xl w-full md:w-fit max-w-full overflow-x-auto no-scrollbar scroll-smooth shadow-inner border border-slate-200/50">
-        {filterOptions.map((opt) => (
-          <SmartPrefetch key={opt.value} type="fields" className="contents">
-            <Link
-              href={opt.value ? `/agent/fields?status=${opt.value}` : "/agent/fields"}
-              className={`flex-1 md:flex-none px-3 py-2 sm:px-6 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap text-center ${
-                (status === opt.value || (!status && !opt.value))
-                  ? "bg-white text-emerald-700 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700"
-              }`}
-            >
-              {opt.label}
-            </Link>
-          </SmartPrefetch>
-        ))}
+      {/* Search and Filters */}
+      <div className="mb-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div className="flex flex-nowrap gap-1 md:gap-4 p-1 bg-slate-100/50 rounded-2xl w-full lg:w-fit overflow-x-auto no-scrollbar shadow-inner border border-slate-200/50">
+          {filterOptions.map((opt) => (
+            <SmartPrefetch key={opt.value} type="fields" className="contents">
+              <Link
+                href={opt.value ? `/agent/fields?status=${opt.value}` : "/agent/fields"}
+                className={`flex-1 md:flex-none px-3 py-2 sm:px-6 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap text-center ${
+                  (status === opt.value || (!status && !opt.value))
+                    ? "bg-white text-emerald-700 shadow-sm"
+                    : "text-slate-500 hover:text-slate-700"
+                }`}
+              >
+                {opt.label}
+              </Link>
+            </SmartPrefetch>
+          ))}
+        </div>
+        <SearchBar placeholder="Search your fields..." />
       </div>
 
       <HybridGrid>

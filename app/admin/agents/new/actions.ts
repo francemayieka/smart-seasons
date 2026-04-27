@@ -32,8 +32,8 @@ export async function createAgentAction(formData: FormData) {
     },
   });
 
-  revalidateTag("agents", "default");
-  revalidateTag("dashboard", "default");
+  revalidateTag("agents", "max", "max");
+  revalidateTag("dashboard", "max", "max");
   revalidatePath("/admin/agents");
 
   return { success: true, generatedPassword };
